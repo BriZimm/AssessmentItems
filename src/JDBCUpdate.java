@@ -1,5 +1,18 @@
 import java.sql .*;
 public class JDBCUpdate {
+	
+	//define the driver to use
+		public static String driver = Login.DRIVER_CLASS;
+		//the database info
+	    public static String dbName =Login.DB;  
+	    public static String user = Login.USER;
+	    public static String pw = Login.PWD;
+	    // define the DB connection URL to use
+	    public static String connectionURL = Login.DRIVER+dbName; 
+	    public static Connection conn = null ;
+	    public static Statement stmt;
+	    public static ResultSet results;
+	    
     public static void main ( String [] args ) {
         String connectionURL = Login.DRIVER + Login.DB;
         Connection conn = null ;
@@ -46,6 +59,21 @@ public class JDBCUpdate {
             } 
             catch ( SQLException e1) {}
         }
+    }
+    
+    // A query to update a specific CDAI (identified by id such as A1) Rarely used except on initial setup of database
+    public static boolean UpdateCDAI() {
+    	try {
+    		Class.forName (driver); // register the JDBC driver
+	    	conn = DriverManager.getConnection (connectionURL,user,pw );
+	        stmt = conn.createStatement();
+	        String query = "UPDATE grades SET CDAI=SUBSTRING(grades.criteria, 1, 2);";
+	        int outcome = stmt.executeUpdate(query );
+	        return true;
+    	} catch ( Exception e) { 
+            System .out.println (" Error " + e );
+        }
+    	return true;
     }
 }
 

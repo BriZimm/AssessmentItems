@@ -1,5 +1,6 @@
 import java.sql.*;
 
+// Test Class to Verify the Database is being connected to the Application
 public class MySQLClass {
 	
 	public static void main(String[] args) {
@@ -21,4 +22,6 @@ public class MySQLClass {
 			  e.printStackTrace();
 		  }
 	}
+	
+	
 } 
