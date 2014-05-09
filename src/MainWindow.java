@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -17,13 +18,18 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.DriverManager;
+
 import javax.swing.JTextField;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JSeparator;
+import javax.swing.JComboBox;
 
 
 public class MainWindow {
@@ -31,11 +37,10 @@ public class MainWindow {
 	private JFrame frame;
 	private JTextField StudentName;
 	private JTextField txtCriteria;
-	private JTextField txtStudent;
+	private JTextField txtStudentFirst;
 	private JTextField txtAssessment;
-	private JTextField txtEmphasis;
-	private JTextField textField;
 	private JTable ResultsTable;
+	private JTextField txtStudentLast;
 
 	/**
 	 * Launch the application.
@@ -69,40 +74,6 @@ public class MainWindow {
 		frame.getContentPane().setBackground(Color.ORANGE);
 		frame.getContentPane().setLayout(null);
 		
-	
-		
-		// Bottom Buttons
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 521, 1000, 57);
-		panel.setBackground(new Color(30, 144, 255));
-		panel.setBorder(new CompoundBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), new BevelBorder(BevelBorder.LOWERED, null, null, null, null)));
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignOnBaseline(true);
-		flowLayout.setVgap(10);
-		flowLayout.setHgap(10);
-		frame.getContentPane().add(panel);
-		
-		JLabel lblSearchBy = new JLabel("Search By:");
-		lblSearchBy.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		lblSearchBy.setForeground(new Color(255, 255, 255));
-		panel.add(lblSearchBy);
-		
-		JButton btnSearchByStudent = new JButton("Student");
-		btnSearchByStudent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		panel.add(btnSearchByStudent);
-		
-		JButton btnAssessment = new JButton("Assessment");
-		panel.add(btnAssessment);
-		
-		JButton btnFaculty = new JButton("Faculty");
-		panel.add(btnFaculty);
-		
-		JButton btnSemesterYear = new JButton("Semester / Year");
-		panel.add(btnSemesterYear);
-		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 22, 1, 499);
 		frame.getContentPane().add(panel_1);
@@ -118,35 +89,32 @@ public class MainWindow {
 				RowSpec.decode("28px"),}));
 		
 		JPanel LeftPanel = new JPanel();
-		LeftPanel.setBounds(6, 91, 238, 253);
+		LeftPanel.setBounds(6, 91, 238, 301);
 		frame.getContentPane().add(LeftPanel);
 		LeftPanel.setLayout(null);
 		
 		JLabel lblCriteria = new JLabel("Criteria ID");
-		lblCriteria.setBounds(5, 164, 75, 16);
+		lblCriteria.setBounds(7, 247, 75, 16);
 		LeftPanel.add(lblCriteria);
 		
 		txtCriteria = new JTextField();
-		txtCriteria.setBounds(107, 159, 124, 28);
+		txtCriteria.setToolTipText("e.g. A1S12C1");
+		txtCriteria.setBounds(4, 263, 155, 28);
 		LeftPanel.add(txtCriteria);
 		txtCriteria.setColumns(10);
 		
-		txtStudent = new JTextField();
-		txtStudent.setBounds(108, 35, 124, 28);
-		LeftPanel.add(txtStudent);
-		txtStudent.setColumns(10);
-		
 		txtAssessment = new JTextField();
-		txtAssessment.setBounds(108, 65, 124, 28);
+		txtAssessment.setToolTipText("e.g. A1 or A1F12");
+		txtAssessment.setBounds(4, 124, 155, 28);
 		LeftPanel.add(txtAssessment);
 		txtAssessment.setColumns(10);
 		
-		JLabel lblAssessment = new JLabel("Assessment ID");
-		lblAssessment.setBounds(6, 71, 104, 16);
+		JLabel lblAssessment = new JLabel("Search by Assessment");
+		lblAssessment.setBounds(7, 108, 179, 16);
 		LeftPanel.add(lblAssessment);
 		
-		JLabel lblStudentName = new JLabel("Student Name");
-		lblStudentName.setBounds(6, 41, 90, 16);
+		JLabel lblStudentName = new JLabel("Search for a Student");
+		lblStudentName.setBounds(7, 26, 155, 22);
 		LeftPanel.add(lblStudentName);
 		
 		JLabel lblSearchIndex = new JLabel("Search Index");
@@ -156,26 +124,98 @@ public class MainWindow {
 		LeftPanel.add(lblSearchIndex);
 		
 		JLabel lblEmphasis = new JLabel("Emphasis");
-		lblEmphasis.setBounds(6, 102, 90, 16);
+		lblEmphasis.setBounds(7, 153, 75, 16);
 		LeftPanel.add(lblEmphasis);
 		
-		txtEmphasis = new JTextField();
-		txtEmphasis.setColumns(10);
-		txtEmphasis.setBounds(108, 96, 124, 28);
-		LeftPanel.add(txtEmphasis);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(107, 127, 124, 28);
-		LeftPanel.add(textField);
-		
 		JLabel lblStatus = new JLabel("Status");
-		lblStatus.setBounds(5, 131, 90, 16);
+		lblStatus.setBounds(7, 200, 80, 16);
 		LeftPanel.add(lblStatus);
+		
+		JButton btnStudentSearch = new JButton("Search");
+		btnStudentSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Grab the values from the fields
+				String firstName = txtStudentFirst.getText();
+				String lastName = txtStudentLast.getText();
+				// Search
+				searchStudent(firstName, lastName);
+			}
+		});
+		btnStudentSearch.setBounds(156, 60, 70, 29);
+		LeftPanel.add(btnStudentSearch);
+		
+		JButton btnAssessSearch = new JButton("Search");
+		btnAssessSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String CDAI = txtAssessment.getText();
+				searchCDAI(CDAI);
+			}
+		});
+		btnAssessSearch.setBounds(156, 123, 70, 29);
+		LeftPanel.add(btnAssessSearch);
+		
+		JButton btnEmphSearch = new JButton("Search");
+		btnEmphSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnEmphSearch.setBounds(156, 168, 70, 29);
+		LeftPanel.add(btnEmphSearch);
+		
+		JButton btnStatusSearch = new JButton("Search");
+		btnStatusSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnStatusSearch.setBounds(156, 216, 70, 29);
+		LeftPanel.add(btnStatusSearch);
+		
+		JButton btnCriteriaSearch = new JButton("Search");
+		btnCriteriaSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnCriteriaSearch.setBounds(156, 262, 70, 29);
+		LeftPanel.add(btnCriteriaSearch);
+		
+		
+		// Combo Boxes for Emphasis and Status
+		JComboBox<String> emphasisComboBox = new JComboBox<String>();
+		emphasisComboBox.setBounds(5, 170, 154, 27);
+		LeftPanel.add(emphasisComboBox);
+		fillEmphasisComboBox(emphasisComboBox);
+		
+		JComboBox<String> StatusComboBox = new JComboBox<String>();
+		StatusComboBox.setBounds(4, 218, 155, 27);
+		LeftPanel.add(StatusComboBox);
+		fillStatusComboBox(StatusComboBox);
+		
+		txtStudentFirst = new JTextField();
+		txtStudentFirst.setToolTipText("First Name");
+		txtStudentFirst.setBounds(41, 46, 118, 28);
+		LeftPanel.add(txtStudentFirst);
+		txtStudentFirst.setColumns(10);
+		
+		txtStudentLast = new JTextField();
+		txtStudentLast.setToolTipText("Last Name");
+		txtStudentLast.setColumns(10);
+		txtStudentLast.setBounds(41, 73, 118, 28);
+		LeftPanel.add(txtStudentLast);
+		
+		JLabel lblFirst = new JLabel("First");
+		lblFirst.setBounds(6, 52, 37, 16);
+		LeftPanel.add(lblFirst);
+		
+		JLabel lblLast = new JLabel("Last");
+		lblLast.setBounds(6, 80, 37, 16);
+		LeftPanel.add(lblLast);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
-		panel_2.setBounds(6, 350, 238, 164);
+		panel_2.setBounds(6, 397, 238, 164);
 		frame.getContentPane().add(panel_2);
 		
 		JLabel lblAdministration = new JLabel("Administration");
@@ -253,16 +293,118 @@ public class MainWindow {
 		separator.setBounds(249, 34, 491, 12);
 		HeaderPanel.add(separator);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(251, 91, 743, 423);
-		frame.getContentPane().add(panel_3);
+		JPanel resultsPanel = new JPanel();
+		resultsPanel.setBounds(251, 91, 743, 470);
+		frame.getContentPane().add(resultsPanel);
 		
 		ResultsTable = new JTable();
-		panel_3.add(ResultsTable);
+		resultsPanel.add(ResultsTable);
 		
 		
 		// End Frame
 		frame.setBounds(50, 50, 1000, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private void fillEmphasisComboBox(JComboBox<String> emphasisComboBox) {
+		try {
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "SELECT description from stu_emphasis";
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			while(MySQLConnect.results.next()) {
+				String emphasisname = MySQLConnect.results.getString("description");
+				emphasisComboBox.addItem(emphasisname);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}	
+	}
+	
+	private void fillStatusComboBox(JComboBox<String> StatusComboBox) {
+		try {
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "SELECT status_description from stu_status";
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			while(MySQLConnect.results.next()) {
+				String emphasisname = MySQLConnect.results.getString("status_description");
+				StatusComboBox.addItem(emphasisname);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}	
+	}
+	
+	private void searchStudent(String studentFirstName, String studentLastName) {
+		try {
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query;
+			if (studentFirstName.length() < 1 && studentLastName.length() < 1 ) {
+				query = ""; // No text was entered in the name fields. Return No Results
+			} else if (studentFirstName.length() < 1) {
+				query = "SELECT * FROM student WHERE `lname` LIKE '" + studentLastName + "'";
+			} else if (studentLastName.length() < 1) {
+				query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "'";
+			} else {
+				query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "' OR `lname` LIKE '" + studentLastName + "'";
+			}
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			while(MySQLConnect.results.next()) {
+				String id = MySQLConnect.results.getString("uni_id");
+				String fname = MySQLConnect.results.getString("fname");
+				String mname = MySQLConnect.results.getString("mname");
+				String lname = MySQLConnect.results.getString("lname");
+				String sdate = MySQLConnect.results.getString("sdate");
+				String edate = MySQLConnect.results.getString("edate");
+				String emphasis = MySQLConnect.results.getString("emphasis");
+				String status = MySQLConnect.results.getString("status");
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}	
+
+	}
+	
+	private void searchCDAI(String CDAI) {
+		try {
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query;
+			if (studentFirstName.length() < 1 && studentLastName.length() < 1 ) {
+				query = ""; // No text was entered in the name fields. Return No Results
+			} else if (studentFirstName.length() < 1) {
+				query = "SELECT * FROM student WHERE `lname` LIKE '" + studentLastName + "'";
+			} else if (studentLastName.length() < 1) {
+				query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "'";
+			} else {
+				query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "' OR `lname` LIKE '" + studentLastName + "'";
+			}
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			while(MySQLConnect.results.next()) {
+				String id = MySQLConnect.results.getString("uni_id");
+				String fname = MySQLConnect.results.getString("fname");
+				String mname = MySQLConnect.results.getString("mname");
+				String lname = MySQLConnect.results.getString("lname");
+				String sdate = MySQLConnect.results.getString("sdate");
+				String edate = MySQLConnect.results.getString("edate");
+				String emphasis = MySQLConnect.results.getString("emphasis");
+				String status = MySQLConnect.results.getString("status");
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}	
+
 	}
 }
