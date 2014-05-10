@@ -260,7 +260,9 @@ public class MainWindow {
 		btnAdminFaculty.setBounds(6, 91, 117, 29);
 		btnAdminFaculty.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				adminFrame = new JFrame();
+				adminFaculty window = new adminFaculty();
+				window.adminFrame.setVisible(true);
 			}
 		});
 		panel_2.add(btnAdminFaculty);
@@ -268,7 +270,9 @@ public class MainWindow {
 		JButton btnAdminCriteria = new JButton("Criteria");
 		btnAdminCriteria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				adminFrame = new JFrame();
+				adminCriteria window = new adminCriteria();
+				window.adminFrame.setVisible(true);
 			}
 		});
 		btnAdminCriteria.setBounds(115, 91, 117, 29);
@@ -578,7 +582,6 @@ public class MainWindow {
 				String emphasis = MySQLConnect.results.getString("emphasis");
 				String status = MySQLConnect.results.getString("status");
 			}
-
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	

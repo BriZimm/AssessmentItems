@@ -13,20 +13,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 
 
-public class adminEmphasis {
+public class adminCriteria {
 
 	JFrame adminFrame;
-	private JTextField AddedEmphasis;
-	private JTextField RemovedEmphasis;
-	private JComboBox<String> emphasisBox;
+	private JTextField addedCriteriaName;
+	private JTextField removedCriteria;
+	private JTextArea txtDescription;
 	
 	/**
 	 * Create the window.
 	 */
-	public adminEmphasis() {
+	public adminCriteria() {
 		initialize();
 	}
 	
@@ -47,10 +50,10 @@ public class adminEmphasis {
 		panel.setBackground(Color.ORANGE);
 		adminFrame.getContentPane().add(panel, BorderLayout.NORTH);
 		
-		JLabel lblEditEmphasisList = new JLabel("Edit Emphasis List");
-		lblEditEmphasisList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblEditEmphasisList.setForeground(Color.BLACK);
-		panel.add(lblEditEmphasisList);
+		JLabel lblEditCriteria = new JLabel("Edit Criteria");
+		lblEditCriteria.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblEditCriteria.setForeground(Color.BLACK);
+		panel.add(lblEditCriteria);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.ORANGE);
@@ -64,91 +67,79 @@ public class adminEmphasis {
 		adminFrame.getContentPane().add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(null);
 		
-		emphasisBox = new JComboBox<String>();
-		emphasisBox.setBounds(78, 6, 134, 27);
-		emphasisBox.setEditable(true);
-		fillEmphasisList(emphasisBox);
-		panel_2.add(emphasisBox);
-		
-		JLabel lblCurrent = new JLabel("Current");
-		lblCurrent.setBounds(19, 12, 58, 16);
-		panel_2.add(lblCurrent);
-		
 		JLabel lblAdd = new JLabel("Add");
-		lblAdd.setBounds(19, 64, 58, 16);
+		lblAdd.setBounds(22, 12, 38, 16);
 		panel_2.add(lblAdd);
 		
 		JLabel lblRemove = new JLabel("Remove");
-		lblRemove.setBounds(19, 112, 58, 16);
+		lblRemove.setBounds(21, 130, 58, 16);
 		panel_2.add(lblRemove);
 		
-		RemovedEmphasis = new JTextField();
-		RemovedEmphasis.setColumns(10);
-		RemovedEmphasis.setBounds(78, 106, 134, 28);
-		panel_2.add(RemovedEmphasis);
+		removedCriteria = new JTextField();
+		removedCriteria.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		removedCriteria.setToolTipText("Enter Criteria Name to delete.");
+		removedCriteria.setColumns(10);
+		removedCriteria.setBounds(84, 124, 126, 28);
+		panel_2.add(removedCriteria);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(212, 107, 82, 29);
+		btnRemove.setBounds(210, 125, 82, 29);
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
-				String emphasis = RemovedEmphasis.getText();
+				String emphasis = removedCriteria.getText();
 				// Search
 				if (emphasis.length() != 0) {
-					removeEmphasis(emphasis);
-					RemovedEmphasis.setText("");
-					emphasisBox.removeAllItems();
-					fillEmphasisList(emphasisBox);
+					removeCriteria(emphasis);
+					removedCriteria.setText("");
 				}
 			}
 		});
 		panel_2.add(btnRemove);
 		
-		AddedEmphasis = new JTextField();
-		AddedEmphasis.setBounds(78, 58, 134, 28);
-		panel_2.add(AddedEmphasis);
-		AddedEmphasis.setColumns(10);
+		addedCriteriaName = new JTextField();
+		addedCriteriaName.setBounds(84, 6, 126, 28);
+		panel_2.add(addedCriteriaName);
+		addedCriteriaName.setColumns(10);
+		
+		txtDescription = new JTextArea();
+		txtDescription.setBounds(87, 39, 194, 73);
+		panel_2.add(txtDescription);
 		
 		JButton btnAdd = new JButton("Add");
-		btnAdd.setBounds(212, 59, 82, 29);
+		btnAdd.setBounds(210, 7, 82, 29);
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
-				String emphasis = AddedEmphasis.getText();
+				String criteria = addedCriteriaName.getText();
+				String description = txtDescription.getText();
 				// Search
-				if (emphasis.length() != 0) {
-					addEmphasis(emphasis);
-					AddedEmphasis.setText("");
-					emphasisBox.removeAllItems();
-					fillEmphasisList(emphasisBox);
+				if (criteria.length() != 0 && description.length() != 0) {
+					addCriteria(criteria, description);
+					addedCriteriaName.setText("");
+					txtDescription.setText("");
 				}
 			}
 		});
 		panel_2.add(btnAdd);
 		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(21, 113, 260, 12);
+		panel_2.add(separator);
+		
+		JLabel lblDescription = new JLabel("Description");
+		lblDescription.setBounds(6, 67, 73, 16);
+		panel_2.add(lblDescription);
+		
 	}
 	
-	private void fillEmphasisList(JComboBox<String> emphasisBox) {
-		try {
-			MySQLConnect conn = new MySQLConnect();
-			conn.connect();
-			String query = "SELECT description from stu_emphasis";
-			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-			while(MySQLConnect.results.next()) {
-				String emphasisname = MySQLConnect.results.getString("description");
-				emphasisBox.addItem(emphasisname);
-			}
-			
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,  e);
-		}	
-	}
-	
-	 private void addEmphasis(String addedEmphasis) {
+	 private void addCriteria(String addedCriteria, String description) {
     	try {
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "INSERT INTO stu_emphasis (description) VALUE ('" + addedEmphasis + "')";
+			String cdai = addedCriteria.substring(0,2);
+			String unique_id = addedCriteria.substring(0,5);
+			String query = "INSERT INTO criteria (CDAI, unique_id, name, description) VALUE ('" + cdai + "', '" + unique_id + "', '" + addedCriteria + "','" + description + "')";
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
@@ -157,11 +148,11 @@ public class adminEmphasis {
         }
     }
 	 // NOT_DONE
-	 private void removeEmphasis(String removedEmphasis) {
+	 private void removeCriteria(String removedCriteria) {
     	try {
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "DELETE FROM stu_emphasis WHERE `description` = '" + removedEmphasis + "'";
+			String query = "DELETE FROM stu_emphasis WHERE `name` = '" + removedCriteria + "'";
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();

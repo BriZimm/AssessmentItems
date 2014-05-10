@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 
 
-public class adminEmphasis {
+public class adminStatus {
 
 	JFrame adminFrame;
 	private JTextField AddedEmphasis;
@@ -26,7 +26,7 @@ public class adminEmphasis {
 	/**
 	 * Create the window.
 	 */
-	public adminEmphasis() {
+	public adminStatus() {
 		initialize();
 	}
 	
@@ -170,3 +170,4 @@ public class adminEmphasis {
         }
     }
 }
+
