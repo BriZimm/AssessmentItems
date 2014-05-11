@@ -199,7 +199,7 @@ public class adminAssessments {
 				String cdai_id = CDAI_NAME.getText();
 				String semester = CDAI_semester.getText();
 				String course_num = CDAICourseNum.getText();
-				int faculty_index = CDAIFacultycomboBox.getSelectedIndex() + 1;
+				String faculty = (String)CDAIFacultycomboBox.getSelectedItem();
 				String startDate = CDAI_Date.getText();
 				
 				// rebuild assess_id from CDAI and semester
@@ -218,8 +218,6 @@ public class adminAssessments {
 				// Add the year
 				String year = semester.substring(semester.length() - 2);	
 				assess_id = assess_id + year;
-				
-				String faculty = getFacultyName(faculty_index);
 						
 				saveCDAI(cdai_id, assess_id, course_num, faculty, startDate);
 			}
