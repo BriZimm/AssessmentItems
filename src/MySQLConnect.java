@@ -10,7 +10,7 @@ public class MySQLConnect {
     public static String pw = Login.PWD;
     // define the DB connection URL to use
     public static String connectionURL = Login.DRIVER+dbName; 
-    public static Connection conn = null ;
+    public static Connection conn = null;
     public static Statement stmt;
     public static ResultSet results;
 	
@@ -21,13 +21,21 @@ public class MySQLConnect {
 			  Class.forName(driver).newInstance();
 			  conn = DriverManager.getConnection (connectionURL,user,pw );
 		      stmt = conn.createStatement();
-		      
-		      
 		  } catch (Exception e) {
 			  System.out.println("Failure!");
 			  e.printStackTrace();
 		  }
 	}
+
+	public void close() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
+
 	
 } 

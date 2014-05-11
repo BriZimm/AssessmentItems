@@ -60,6 +60,12 @@ public class adminCriteria {
 		adminFrame.getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
 		JButton btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminFrame.setVisible(false);
+				adminFrame.dispose();
+			}
+		});
 		panel_1.add(btnOK);
 		
 		JPanel panel_2 = new JPanel();
@@ -152,7 +158,7 @@ public class adminCriteria {
     	try {
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "DELETE FROM stu_emphasis WHERE `name` = '" + removedCriteria + "'";
+			String query = "DELETE FROM criteria WHERE `name` = '" + removedCriteria + "'";
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();

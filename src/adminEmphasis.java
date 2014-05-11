@@ -57,6 +57,15 @@ public class adminEmphasis {
 		adminFrame.getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
 		JButton btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminFrame.setVisible(false);
+				adminFrame.dispose();
+				MainWindow.emphasisComboBox.removeAllItems();
+				MainWindow.fillEmphasisComboBox(MainWindow.emphasisComboBox);
+			}
+				
+		});
 		panel_1.add(btnOK);
 		
 		JPanel panel_2 = new JPanel();
@@ -138,7 +147,7 @@ public class adminEmphasis {
 				String emphasisname = MySQLConnect.results.getString("description");
 				emphasisBox.addItem(emphasisname);
 			}
-			
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -152,11 +161,13 @@ public class adminEmphasis {
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
     }
-	 // NOT_DONE
+	 
 	 private void removeEmphasis(String removedEmphasis) {
     	try {
     		MySQLConnect conn = new MySQLConnect();
@@ -165,6 +176,8 @@ public class adminEmphasis {
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }

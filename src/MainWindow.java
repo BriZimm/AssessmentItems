@@ -36,7 +36,9 @@ import javax.swing.border.MatteBorder;
 
 public class MainWindow {
 
-	private JFrame frame;
+	public static JFrame frame;
+	public static JComboBox<String> emphasisComboBox;
+	public static JComboBox<String> StatusComboBox;
 	private JFrame adminFrame;
 	private JTextField StudentName;
 	private JTextField txtCriteria;
@@ -44,6 +46,7 @@ public class MainWindow {
 	private JTextField txtAssessment;
 	private JTable ResultsTable;
 	private JTextField txtStudentLast;
+	
 
 	/**
 	 * Launch the application.
@@ -154,7 +157,7 @@ public class MainWindow {
 		
 		
 		// Combo Boxes for Emphasis and Status
-		JComboBox<String> emphasisComboBox = new JComboBox<String>();
+		emphasisComboBox = new JComboBox<String>();
 		emphasisComboBox.setBounds(5, 170, 154, 27);
 		LeftPanel.add(emphasisComboBox);
 		fillEmphasisComboBox(emphasisComboBox);
@@ -172,7 +175,7 @@ public class MainWindow {
 		lblStatus.setBounds(7, 200, 80, 16);
 		LeftPanel.add(lblStatus);
 		
-		JComboBox<String> StatusComboBox = new JComboBox<String>();
+		StatusComboBox = new JComboBox<String>();
 		StatusComboBox.setBounds(4, 218, 155, 27);
 		LeftPanel.add(StatusComboBox);
 		fillStatusComboBox(StatusComboBox);
@@ -251,7 +254,9 @@ public class MainWindow {
 		btnAdminStudentStatus.setBounds(6, 61, 117, 29);
 		btnAdminStudentStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				adminFrame = new JFrame();
+				adminStatus window = new adminStatus();
+				window.adminFrame.setVisible(true);
 			}
 		});
 		panel_2.add(btnAdminStudentStatus);
@@ -522,7 +527,7 @@ public class MainWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	private void fillEmphasisComboBox(JComboBox<String> emphasisComboBox) {
+	public static void fillEmphasisComboBox(JComboBox<String> emphasisComboBox) {
 		try {
 			MySQLConnect conn = new MySQLConnect();
 			conn.connect();
@@ -533,13 +538,13 @@ public class MainWindow {
 				String emphasisname = MySQLConnect.results.getString("description");
 				emphasisComboBox.addItem(emphasisname);
 			}
-
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
 	}
 	
-	private void fillStatusComboBox(JComboBox<String> StatusComboBox) {
+	public static void fillStatusComboBox(JComboBox<String> StatusComboBox) {
 		try {
 			MySQLConnect conn = new MySQLConnect();
 			conn.connect();
@@ -550,7 +555,7 @@ public class MainWindow {
 				String emphasisname = MySQLConnect.results.getString("status_description");
 				StatusComboBox.addItem(emphasisname);
 			}
-
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -583,6 +588,7 @@ public class MainWindow {
 				String emphasis = MySQLConnect.results.getString("emphasis");
 				String status = MySQLConnect.results.getString("status");
 			}
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -610,7 +616,7 @@ public class MainWindow {
 				String faculty = MySQLConnect.results.getString("faculty");
 				String startDate = MySQLConnect.results.getString("startdate");
 			}
-
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -631,7 +637,7 @@ public class MainWindow {
 				String name = MySQLConnect.results.getString("name");
 				String description = MySQLConnect.results.getString("description");
 			}
-
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -651,7 +657,7 @@ public class MainWindow {
 				String name = MySQLConnect.results.getString("name");
 				String description = MySQLConnect.results.getString("description");
 			}
-
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
@@ -673,7 +679,7 @@ public class MainWindow {
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
 			
 			
-			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -689,7 +695,8 @@ public class MainWindow {
 			String query = "SELECT avg(score) AS 'Avg for specific CDAI', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM `criteria` WHERE unique_id = '" + AssessID + "')";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-
+			
+			conn.close();
     	} catch ( Exception e) { 
             System .out.println (" Error " + e );
         }
@@ -704,6 +711,8 @@ public class MainWindow {
 			String query = "SELECT avg(score) AS 'average', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM criteria WHERE CDAI = '" + AssessID + "') GROUP BY criteria ORDER BY criteria";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -718,6 +727,8 @@ public class MainWindow {
 			String query = "SELECT unique_id, AVG(score) AS 'average' FROM(SELECT uni_id, unique_id, score FROM grades g JOIN criteria c WHERE g.criteria = c.name) scores WHERE unique_id = '" + AssessID + "' GROUP BY unique_id ORDER BY uni_id";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -732,6 +743,8 @@ public class MainWindow {
 			String query = "SELECT avg(score) AS 'average' FROM grades WHERE criteria IN (SELECT name AS 'criteria' FROM criteria WHERE CDAI = '" + AssessID + "')";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -746,6 +759,8 @@ public class MainWindow {
 			String query = "SELECT avg( score ) AS 'average', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) DESC LIMIT 1";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -760,6 +775,8 @@ public class MainWindow {
 			String query = "SELECT avg( score ) AS 'average', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) ASC LIMIT 1;";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -775,6 +792,8 @@ public class MainWindow {
 			String query = "SELECT emphasis, avg( score ) AS 'average', max( score ) AS 'maxscore', min( score ) AS 'minscore' FROM grades JOIN student ON student.uni_id = grades.uni_id GROUP BY emphasis ORDER BY emphasis";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -790,6 +809,8 @@ public class MainWindow {
 			String query = "SELECT fname, lname, g.CDAI AS 'CDAI', criteria, score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '" + fname + "' AND `lname` LIKE '%" + lname + "') ORDER BY g.uni_id";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -804,6 +825,8 @@ public class MainWindow {
 			String query = "SELECT uni_id, fname, lname, max(scores.scored) as maxScore, min(scores.scored) as minScore, avg(scores.scored) as avgScore FROM (SELECT uni_id, cdai, avg(score) as scored FROM grades GROUP BY cdai, uni_id) scores NATURAL JOIN student GROUP BY uni_id";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
