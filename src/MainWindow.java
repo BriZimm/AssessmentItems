@@ -459,8 +459,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
 			        frame, 
-			        "Enter specific CDAI (e.g. A1)", 
-			        "CDAI Name", 
+			        "Enter First and Last Name of Student", 
+			        "Student Grades", 
 			        JOptionPane.INFORMATION_MESSAGE
 				);
 				getAvgOfAllCDAICriteria(txtEntered);
@@ -475,9 +475,10 @@ public class MainWindow {
 		JButton btnQuery10 = new JButton("Query10");
 		btnQuery10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				getInfoForstudents();
 			}
 		});
-		btnQuery10.setToolTipText("Doesn't work right now.");
+		btnQuery10.setToolTipText("Returns Min, Max and Average Grade for all Students.");
 		btnQuery10.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnQuery10.setBounds(837, 28, 150, 29);
 		panel.add(btnQuery10);
@@ -779,7 +780,7 @@ public class MainWindow {
         }
     }
   
-    // Phase 2 Query 9 - Doesn't work right now.
+    // Phase 2 Query 9
     // A query to display all the CDAI data (every criteria score earned by that student) for 
     // a student, identified by first name and last name.
     private void getCDAIforstudent(String fname, String lname) {
@@ -787,6 +788,20 @@ public class MainWindow {
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
 			String query = "SELECT fname, lname, g.CDAI AS 'CDAI', criteria, score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '" + fname + "' AND `lname` LIKE '%" + lname + "') ORDER BY g.uni_id";
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+    	} catch ( Exception e) { 
+    		JOptionPane.showMessageDialog(null,  e);
+        }
+    }
+    
+ // Phase 2 Query 10 
+    // A query to display all min, max and avg scores for all students..
+    private void getInfoForstudents() {
+    	try {
+    		MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "SELECT uni_id, fname, lname, max(scores.scored) as maxScore, min(scores.scored) as minScore, avg(scores.scored) as avgScore FROM (SELECT uni_id, cdai, avg(score) as scored FROM grades GROUP BY cdai, uni_id) scores NATURAL JOIN student GROUP BY uni_id";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
     	} catch ( Exception e) { 
