@@ -21,9 +21,9 @@ public class MySQLConnect {
 			  Class.forName(driver).newInstance();
 			  conn = DriverManager.getConnection (connectionURL,user,pw );
 		      stmt = conn.createStatement();
-		      System.out.println("Success!");
+		      //System.out.println("Success!");
 		  } catch (Exception e) {
-			  System.out.println("Failure!");
+			  System.out.println("Database Connection Failure!");
 			  e.printStackTrace();
 		  }
 	}
