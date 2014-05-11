@@ -148,7 +148,7 @@ public class adminAssessments {
 		btnSearchForCDAI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String CDAI = txtSearchForAssessment.getText();
-				
+				fetchCDAI(CDAI);
 			}
 		});
 		panel_2.add(btnSearchForCDAI);
@@ -169,16 +169,16 @@ public class adminAssessments {
 		panel_2.add(lblCdai);
 		
 		CDAI_NAME = new JTextField();
-		CDAI_NAME.setBounds(60, 46, 58, 28);
+		CDAI_NAME.setBounds(55, 46, 58, 28);
 		panel_2.add(CDAI_NAME);
 		CDAI_NAME.setColumns(10);
 		
 		JLabel lblSemester = new JLabel("Semester");
-		lblSemester.setBounds(135, 52, 61, 16);
+		lblSemester.setBounds(116, 52, 61, 16);
 		panel_2.add(lblSemester);
 		
 		CDAI_semester = new JTextField();
-		CDAI_semester.setBounds(199, 46, 97, 28);
+		CDAI_semester.setBounds(175, 46, 112, 28);
 		panel_2.add(CDAI_semester);
 		CDAI_semester.setColumns(10);
 		
@@ -209,11 +209,11 @@ public class adminAssessments {
 		panel_2.add(lblFaculty);
 		
 		JLabel lblDate = new JLabel("Start Date");
-		lblDate.setBounds(310, 52, 65, 16);
+		lblDate.setBounds(299, 52, 179, 16);
 		panel_2.add(lblDate);
 		
 		CDAI_Date = new JTextField();
-		CDAI_Date.setBounds(377, 46, 101, 28);
+		CDAI_Date.setBounds(366, 46, 112, 28);
 		panel_2.add(CDAI_Date);
 		CDAI_Date.setColumns(10);
 		
@@ -247,11 +247,12 @@ public class adminAssessments {
 			String course_num = "";
 			String faculty = "";
 			String startDate = "";
-			int faculty_id;
+			String facultyName_index = "";
+			String semester = "";
 			
 			MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "SELECT * FROM assessments JOIN faculty on faculty.name = assessments.faculty WHERE `assess_id` = '" + CDAI + "'";
+			String query = "SELECT * FROM assessment JOIN faculty on faculty.name = assessment.faculty WHERE `assess_id` = '" + CDAI + "'";
 			System.out.println(query);
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
 			
@@ -260,14 +261,47 @@ public class adminAssessments {
 				assess_id = MySQLConnect.results.getString("assess_id");
 				course_num = MySQLConnect.results.getString("course_num");
 				faculty = MySQLConnect.results.getString("faculty");
-				startDate = MySQLConnect.results.getString("sdate");
+				startDate = MySQLConnect.results.getString("startdate");
 			}
+			
+			String sem = assess_id.substring(assess_id.length() - 3);
+			if (sem.substring(0, 1).equals("F")) {
+				semester = "Fall ";
+			} else if (sem.substring(0, 1).equals("S")){
+				semester = "Spring ";
+			} else {
+				// Summer Class
+				semester = "Summer ";
+			}
+			String year = assess_id.substring(assess_id.length() - 2);
+			year = "20" + year;
+			
+			semester = semester + year;	
+			CDAI_semester.setText(semester);
+			
+			//Set fields
 			CDAI_NAME.setText(cdai_id);
-			CDAI_semester.setText(assess_id);
 			CDAI_Date.setText(startDate);
 			CDAICourseNum.setText(course_num);
-			//CDAIFacultycomboBox.setSelectedIndex(faculty_id)
-			//CDAI_NAME.setText(faculty);
+			conn.close();
+			adminFrame.repaint();
+			
+			// Grab the id of the faculty member and populate the comboBox
+			conn.connect();
+			query = "SELECT id FROM faculty WHERE `name` = '" + faculty + "'";
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			while(MySQLConnect.results.next()) {
+				facultyName_index = MySQLConnect.results.getString("id");
+			}
+			if (facultyName_index.length() != 0) {
+				int faculty_index = Integer.parseInt(facultyName_index);
+				faculty_index -= 1;
+				CDAIFacultycomboBox.setSelectedIndex(faculty_index);
+			} else {
+				CDAIFacultycomboBox.setSelectedIndex(0);
+			}
+			conn.connect();
 			
 			
 			conn.close();
