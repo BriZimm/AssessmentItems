@@ -237,7 +237,9 @@ public class MainWindow {
 		btnAdminStudents.setBounds(115, 31, 117, 29);
 		btnAdminStudents.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				adminFrame = new JFrame();
+				adminStudents window = new adminStudents();
+				window.adminFrame.setVisible(true);
 			}
 		});
 		panel_2.add(btnAdminStudents);
