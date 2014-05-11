@@ -8,13 +8,21 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import com.mysql.jdbc.ResultSetMetaData;
 
 
 
@@ -26,7 +34,7 @@ public class adminAssessments {
 	private JTextField txtSearchForAssessment;
 	private JTextField CDAI_NAME;
 	private JTextField CDAI_semester;
-	private JTable AssessResultsTable;
+	private JTable CriteriaResultsTable;
 	private JTextField CDAICourseNum;
 	private JTextField CDAI_Date;
 	private JComboBox<String> CDAIFacultycomboBox;
@@ -169,6 +177,7 @@ public class adminAssessments {
 		panel_2.add(lblCdai);
 		
 		CDAI_NAME = new JTextField();
+		CDAI_NAME.setEditable(false);
 		CDAI_NAME.setBounds(55, 46, 58, 28);
 		panel_2.add(CDAI_NAME);
 		CDAI_NAME.setColumns(10);
@@ -178,16 +187,43 @@ public class adminAssessments {
 		panel_2.add(lblSemester);
 		
 		CDAI_semester = new JTextField();
+		CDAI_semester.setEditable(false);
 		CDAI_semester.setBounds(175, 46, 112, 28);
 		panel_2.add(CDAI_semester);
 		CDAI_semester.setColumns(10);
 		
-		AssessResultsTable = new JTable();
-		AssessResultsTable.setBounds(19, 123, 456, 173);
-		panel_2.add(AssessResultsTable);
-		
 		JButton btnSaveAssessment = new JButton("Save");
 		btnSaveAssessment.setBounds(369, 88, 117, 29);
+		btnSaveAssessment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String cdai_id = CDAI_NAME.getText();
+				String semester = CDAI_semester.getText();
+				String course_num = CDAICourseNum.getText();
+				int faculty_index = CDAIFacultycomboBox.getSelectedIndex() + 1;
+				String startDate = CDAI_Date.getText();
+				
+				// rebuild assess_id from CDAI and semester
+				String assess_id = cdai_id;
+				String code = "";
+				if (semester.substring(0, 1).equals("F")) {
+					code = "F";
+				} else if (semester.substring(0, 2).equals("Sp")){
+					code = "S";
+				} else {
+					// Summer Class
+					code = "R ";
+				}
+				// Combine CDAI and Semester
+				assess_id = assess_id + code;
+				// Add the year
+				String year = semester.substring(semester.length() - 2);	
+				assess_id = assess_id + year;
+				
+				String faculty = getFacultyName(faculty_index);
+						
+				saveCDAI(cdai_id, assess_id, course_num, faculty, startDate);
+			}
+		});
 		panel_2.add(btnSaveAssessment);
 		
 		JLabel lblCourseNumber = new JLabel("Course #");
@@ -222,6 +258,31 @@ public class adminAssessments {
 		separator_2.setBounds(4, 308, 490, 12);
 		panel_2.add(separator_2);
 		
+		
+		CriteriaResultsTable = new JTable();
+		CriteriaResultsTable.setBounds(19, 123, 456, 173);
+		panel_2.add(CriteriaResultsTable);
+		
+		
+		
+	}
+	
+	private String getFacultyName(int id) {
+		try {
+			String faculty = "";
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "SELECT name from faculty WHERE `id` = " + id;
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			while(MySQLConnect.results.next()) {
+				faculty = MySQLConnect.results.getString("name");
+			}
+			conn.close();
+			return faculty;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}
+		return null;	
 	}
 	
 	private void fillFacultyList(JComboBox<String> facultyBox) {
@@ -301,19 +362,36 @@ public class adminAssessments {
 			} else {
 				CDAIFacultycomboBox.setSelectedIndex(0);
 			}
-			conn.connect();
+			
+			query = "SELECT name, description FROM `criteria` WHERE `unique_id` = '" + CDAI + "';";
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+
+		    // It creates and displays the table
+		
+			CriteriaResultsTable = new JTable(buildTableModel(MySQLConnect.results));
+			
+		    //JOptionPane.showMessageDialog(null, new JScrollPane(CriteriaResultsTable));
 			
 			
-			conn.close();
 		} catch ( Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}
 	}
 	
-	
-	// Grab Selected Items and Save 
-	
-	// combobox.getSelectedItem();
+	private void saveCDAI(String cdai_id, String assess_id, String course_num, String faculty, String startdate) {
+		try {
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "UPDATE assessment SET `CDAI` = '" + cdai_id + "', `assess_id` = '" + assess_id + "', course_num = '" + course_num + "', `faculty` = '" + faculty + "', startdate = '" + startdate + "' ";
+			query += "WHERE `assess_id` = '" + assess_id + "';";
+			System.out.println(query);
+			MySQLConnect.stmt.executeUpdate(query);
+			conn.close();
+		} catch ( Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}
+	}
 	
 	private void addCDAI(String addedCDAI) {
     	try {
@@ -351,4 +429,29 @@ public class adminAssessments {
     		JOptionPane.showMessageDialog(null,  e);
         }
     }
+	
+	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
+
+	    ResultSetMetaData metaData = (ResultSetMetaData) rs.getMetaData();
+
+	    // names of columns
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = metaData.getColumnCount();
+	    for (int column = 1; column <= columnCount; column++) {
+	        columnNames.add(metaData.getColumnName(column));
+	    }
+
+	    // data of the table
+	    Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+	    while (rs.next()) {
+	        Vector<Object> vector = new Vector<Object>();
+	        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+	            vector.add(rs.getObject(columnIndex));
+	        }
+	        data.add(vector);
+	    }
+
+	    return new DefaultTableModel(data, columnNames);
+
+	}
 }
