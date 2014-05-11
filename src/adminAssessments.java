@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
+import javax.swing.JSeparator;
 
 
 
@@ -22,6 +23,7 @@ public class adminAssessments {
 	private JTextField AddedEmphasis;
 	private JTextField RemovedEmphasis;
 	private JComboBox<String> emphasisBox;
+	private JTextField textField;
 	
 	/**
 	 * Create the window.
@@ -38,7 +40,7 @@ public class adminAssessments {
 		adminFrame = new JFrame();
 		adminFrame.setTitle("CDAI Administration");
 		//adminFrame.pack();
-		adminFrame.setSize(300, 250);
+		adminFrame.setSize(500, 400);
 		adminFrame.setLocationRelativeTo(null);
 		adminFrame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -47,10 +49,10 @@ public class adminAssessments {
 		panel.setBackground(Color.ORANGE);
 		adminFrame.getContentPane().add(panel, BorderLayout.NORTH);
 		
-		JLabel lblEditEmphasisList = new JLabel("Edit Emphasis List");
-		lblEditEmphasisList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblEditEmphasisList.setForeground(Color.BLACK);
-		panel.add(lblEditEmphasisList);
+		JLabel lblEditAssessmentList = new JLabel("Edit Assessment");
+		lblEditAssessmentList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblEditAssessmentList.setForeground(Color.BLACK);
+		panel.add(lblEditAssessmentList);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.ORANGE);
@@ -65,30 +67,30 @@ public class adminAssessments {
 		panel_2.setLayout(null);
 		
 		emphasisBox = new JComboBox<String>();
-		emphasisBox.setBounds(78, 6, 134, 27);
+		emphasisBox.setBounds(80, 106, 134, 27);
 		emphasisBox.setEditable(true);
 		fillEmphasisList(emphasisBox);
 		panel_2.add(emphasisBox);
 		
 		JLabel lblCurrent = new JLabel("Current");
-		lblCurrent.setBounds(19, 12, 58, 16);
+		lblCurrent.setBounds(21, 112, 58, 16);
 		panel_2.add(lblCurrent);
 		
 		JLabel lblAdd = new JLabel("Add");
-		lblAdd.setBounds(19, 64, 58, 16);
+		lblAdd.setBounds(21, 146, 58, 16);
 		panel_2.add(lblAdd);
 		
 		JLabel lblRemove = new JLabel("Remove");
-		lblRemove.setBounds(19, 112, 58, 16);
+		lblRemove.setBounds(22, 184, 58, 16);
 		panel_2.add(lblRemove);
 		
 		RemovedEmphasis = new JTextField();
 		RemovedEmphasis.setColumns(10);
-		RemovedEmphasis.setBounds(78, 106, 134, 28);
+		RemovedEmphasis.setBounds(81, 178, 134, 28);
 		panel_2.add(RemovedEmphasis);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(212, 107, 82, 29);
+		btnRemove.setBounds(215, 179, 82, 29);
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
@@ -105,12 +107,12 @@ public class adminAssessments {
 		panel_2.add(btnRemove);
 		
 		AddedEmphasis = new JTextField();
-		AddedEmphasis.setBounds(78, 58, 134, 28);
+		AddedEmphasis.setBounds(80, 140, 134, 28);
 		panel_2.add(AddedEmphasis);
 		AddedEmphasis.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
-		btnAdd.setBounds(212, 59, 82, 29);
+		btnAdd.setBounds(214, 141, 82, 29);
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
@@ -125,6 +127,21 @@ public class adminAssessments {
 			}
 		});
 		panel_2.add(btnAdd);
+		
+		JLabel lblEnterAssessmentTo = new JLabel("Enter Assessment to Edit (e.g. A1F11)");
+		lblEnterAssessmentTo.setBounds(16, 11, 246, 16);
+		panel_2.add(lblEnterAssessmentTo);
+		
+		textField = new JTextField();
+		textField.setBounds(257, 5, 97, 28);
+		panel_2.add(textField);
+		textField.setColumns(10);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBackground(Color.BLACK);
+		separator.setForeground(Color.BLACK);
+		separator.setBounds(21, 48, 465, -15);
+		panel_2.add(separator);
 		
 	}
 	

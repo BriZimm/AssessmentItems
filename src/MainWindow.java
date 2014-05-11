@@ -225,7 +225,9 @@ public class MainWindow {
 		JButton btnAdminAssessment = new JButton("Assessments");
 		btnAdminAssessment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				adminFrame = new JFrame();
+				adminCriteria window = new adminCriteria();
+				window.adminFrame.setVisible(true);
 			}
 		});
 		btnAdminAssessment.setBounds(6, 31, 117, 29);
