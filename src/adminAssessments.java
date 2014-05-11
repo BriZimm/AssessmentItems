@@ -14,16 +14,22 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 
 
 
 public class adminAssessments {
 
 	JFrame adminFrame;
-	private JTextField AddedEmphasis;
-	private JTextField RemovedEmphasis;
-	private JComboBox<String> emphasisBox;
-	private JTextField textField;
+	private JTextField AddedCDAI;
+	private JTextField RemovedCDAI;
+	private JTextField txtSearchForAssessment;
+	private JTextField CDAI_NAME;
+	private JTextField CDAI_semester;
+	private JTable AssessResultsTable;
+	private JTextField CDAICourseNum;
+	private JTextField CDAI_Date;
+	private JComboBox<String> CDAIFacultycomboBox;
 	
 	/**
 	 * Create the window.
@@ -40,7 +46,7 @@ public class adminAssessments {
 		adminFrame = new JFrame();
 		adminFrame.setTitle("CDAI Administration");
 		//adminFrame.pack();
-		adminFrame.setSize(500, 400);
+		adminFrame.setSize(500, 450);
 		adminFrame.setLocationRelativeTo(null);
 		adminFrame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -49,7 +55,7 @@ public class adminAssessments {
 		panel.setBackground(Color.ORANGE);
 		adminFrame.getContentPane().add(panel, BorderLayout.NORTH);
 		
-		JLabel lblEditAssessmentList = new JLabel("Edit Assessment");
+		JLabel lblEditAssessmentList = new JLabel("Edit Assessments");
 		lblEditAssessmentList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		lblEditAssessmentList.setForeground(Color.BLACK);
 		panel.add(lblEditAssessmentList);
@@ -59,6 +65,12 @@ public class adminAssessments {
 		adminFrame.getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
 		JButton btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminFrame.setVisible(false);
+				adminFrame.dispose();
+			}
+		});
 		panel_1.add(btnOK);
 		
 		JPanel panel_2 = new JPanel();
@@ -66,76 +78,80 @@ public class adminAssessments {
 		adminFrame.getContentPane().add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(null);
 		
-		emphasisBox = new JComboBox<String>();
-		emphasisBox.setBounds(80, 106, 134, 27);
-		emphasisBox.setEditable(true);
-		fillEmphasisList(emphasisBox);
-		panel_2.add(emphasisBox);
-		
-		JLabel lblCurrent = new JLabel("Current");
-		lblCurrent.setBounds(21, 112, 58, 16);
-		panel_2.add(lblCurrent);
-		
-		JLabel lblAdd = new JLabel("Add");
-		lblAdd.setBounds(21, 146, 58, 16);
+		JLabel lblAdd = new JLabel("Add CDAI");
+		lblAdd.setBounds(19, 328, 61, 16);
 		panel_2.add(lblAdd);
 		
 		JLabel lblRemove = new JLabel("Remove");
-		lblRemove.setBounds(22, 184, 58, 16);
+		lblRemove.setBounds(289, 328, 51, 16);
 		panel_2.add(lblRemove);
 		
-		RemovedEmphasis = new JTextField();
-		RemovedEmphasis.setColumns(10);
-		RemovedEmphasis.setBounds(81, 178, 134, 28);
-		panel_2.add(RemovedEmphasis);
+		RemovedCDAI = new JTextField();
+		RemovedCDAI.setToolTipText("e.g. A1S11");
+		RemovedCDAI.setColumns(10);
+		RemovedCDAI.setBounds(339, 322, 73, 28);
+		panel_2.add(RemovedCDAI);
 		
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(215, 179, 82, 29);
+		btnRemove.setBounds(409, 322, 82, 29);
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
-				String emphasis = RemovedEmphasis.getText();
+				String CDAI = RemovedCDAI.getText();
 				// Search
-				if (emphasis.length() != 0) {
-					removeEmphasis(emphasis);
-					RemovedEmphasis.setText("");
-					emphasisBox.removeAllItems();
-					fillEmphasisList(emphasisBox);
+				if (CDAI.length() != 0) {
+					removeCDAI(CDAI);
+					RemovedCDAI.setText("");
 				}
 			}
 		});
 		panel_2.add(btnRemove);
 		
-		AddedEmphasis = new JTextField();
-		AddedEmphasis.setBounds(80, 140, 134, 28);
-		panel_2.add(AddedEmphasis);
-		AddedEmphasis.setColumns(10);
+		AddedCDAI = new JTextField();
+		AddedCDAI.setToolTipText("e.g. A1S11");
+		AddedCDAI.setBounds(87, 322, 134, 28);
+		panel_2.add(AddedCDAI);
+		AddedCDAI.setColumns(10);
 		
 		JButton btnAdd = new JButton("Add");
-		btnAdd.setBounds(214, 141, 82, 29);
+		btnAdd.setBounds(215, 323, 58, 29);
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Grab the values from the fields
-				String emphasis = AddedEmphasis.getText();
+				String CDAI = AddedCDAI.getText();
 				// Search
-				if (emphasis.length() != 0) {
-					addEmphasis(emphasis);
-					AddedEmphasis.setText("");
-					emphasisBox.removeAllItems();
-					fillEmphasisList(emphasisBox);
+				if (CDAI.length() != 0) {
+					if (CDAI.length() == 5) {
+						addCDAI(CDAI);
+						AddedCDAI.setText("");
+					} else {
+						JOptionPane.showMessageDialog(null, "You must add a specific semester CDAI (e.g. A2S11).");
+					}	
+				} else {
+					JOptionPane.showMessageDialog(null, "You cannot add a blank CDAI.");
 				}
 			}
 		});
 		panel_2.add(btnAdd);
 		
 		JLabel lblEnterAssessmentTo = new JLabel("Enter Assessment to Edit (e.g. A1F11)");
-		lblEnterAssessmentTo.setBounds(16, 11, 246, 16);
+		lblEnterAssessmentTo.setBounds(22, 9, 246, 16);
 		panel_2.add(lblEnterAssessmentTo);
 		
-		textField = new JTextField();
-		textField.setBounds(257, 5, 97, 28);
-		panel_2.add(textField);
-		textField.setColumns(10);
+		txtSearchForAssessment = new JTextField();
+		txtSearchForAssessment.setBounds(265, 3, 97, 28);
+		panel_2.add(txtSearchForAssessment);
+		txtSearchForAssessment.setColumns(10);
+		
+		JButton btnSearchForCDAI = new JButton("Search");
+		btnSearchForCDAI.setBounds(358, 4, 117, 29);
+		btnSearchForCDAI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String CDAI = txtSearchForAssessment.getText();
+				
+			}
+		});
+		panel_2.add(btnSearchForCDAI);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBackground(Color.BLACK);
@@ -143,45 +159,160 @@ public class adminAssessments {
 		separator.setBounds(21, 48, 465, -15);
 		panel_2.add(separator);
 		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(Color.BLACK);
+		separator_1.setBounds(4, 29, 490, 12);
+		panel_2.add(separator_1);
+		
+		JLabel lblCdai = new JLabel("CDAI:");
+		lblCdai.setBounds(19, 52, 45, 16);
+		panel_2.add(lblCdai);
+		
+		CDAI_NAME = new JTextField();
+		CDAI_NAME.setBounds(60, 46, 58, 28);
+		panel_2.add(CDAI_NAME);
+		CDAI_NAME.setColumns(10);
+		
+		JLabel lblSemester = new JLabel("Semester");
+		lblSemester.setBounds(135, 52, 61, 16);
+		panel_2.add(lblSemester);
+		
+		CDAI_semester = new JTextField();
+		CDAI_semester.setBounds(199, 46, 97, 28);
+		panel_2.add(CDAI_semester);
+		CDAI_semester.setColumns(10);
+		
+		AssessResultsTable = new JTable();
+		AssessResultsTable.setBounds(19, 123, 456, 173);
+		panel_2.add(AssessResultsTable);
+		
+		JButton btnSaveAssessment = new JButton("Save");
+		btnSaveAssessment.setBounds(369, 88, 117, 29);
+		panel_2.add(btnSaveAssessment);
+		
+		JLabel lblCourseNumber = new JLabel("Course #");
+		lblCourseNumber.setBounds(19, 94, 61, 16);
+		panel_2.add(lblCourseNumber);
+		
+		CDAICourseNum = new JTextField();
+		CDAICourseNum.setBounds(78, 88, 61, 28);
+		panel_2.add(CDAICourseNum);
+		CDAICourseNum.setColumns(10);
+		
+		CDAIFacultycomboBox = new JComboBox();
+		CDAIFacultycomboBox.setBounds(193, 89, 165, 27);
+		panel_2.add(CDAIFacultycomboBox);
+		fillFacultyList(CDAIFacultycomboBox);
+		
+		JLabel lblFaculty = new JLabel("Faculty");
+		lblFaculty.setBounds(146, 94, 51, 16);
+		panel_2.add(lblFaculty);
+		
+		JLabel lblDate = new JLabel("Start Date");
+		lblDate.setBounds(310, 52, 65, 16);
+		panel_2.add(lblDate);
+		
+		CDAI_Date = new JTextField();
+		CDAI_Date.setBounds(377, 46, 101, 28);
+		panel_2.add(CDAI_Date);
+		CDAI_Date.setColumns(10);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setForeground(Color.BLACK);
+		separator_2.setBounds(4, 308, 490, 12);
+		panel_2.add(separator_2);
+		
 	}
 	
-	private void fillEmphasisList(JComboBox<String> emphasisBox) {
+	private void fillFacultyList(JComboBox<String> facultyBox) {
 		try {
 			MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "SELECT description from stu_emphasis";
+			String query = "SELECT name from faculty";
 			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
 			while(MySQLConnect.results.next()) {
-				String emphasisname = MySQLConnect.results.getString("description");
-				emphasisBox.addItem(emphasisname);
+				String faculty = MySQLConnect.results.getString("name");
+				facultyBox.addItem(faculty);
 			}
-			
+			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	
 	}
 	
-	 private void addEmphasis(String addedEmphasis) {
+	private void fetchCDAI(String CDAI) {
+		try {
+			String cdai_id = "";
+			String assess_id = "";
+			String course_num = "";
+			String faculty = "";
+			String startDate = "";
+			int faculty_id;
+			
+			MySQLConnect conn = new MySQLConnect();
+			conn.connect();
+			String query = "SELECT * FROM assessments JOIN faculty on faculty.name = assessments.faculty WHERE `assess_id` = '" + CDAI + "'";
+			System.out.println(query);
+			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+			
+			while(MySQLConnect.results.next()) {
+				cdai_id = MySQLConnect.results.getString("CDAI");
+				assess_id = MySQLConnect.results.getString("assess_id");
+				course_num = MySQLConnect.results.getString("course_num");
+				faculty = MySQLConnect.results.getString("faculty");
+				startDate = MySQLConnect.results.getString("sdate");
+			}
+			CDAI_NAME.setText(cdai_id);
+			CDAI_semester.setText(assess_id);
+			CDAI_Date.setText(startDate);
+			CDAICourseNum.setText(course_num);
+			//CDAIFacultycomboBox.setSelectedIndex(faculty_id)
+			//CDAI_NAME.setText(faculty);
+			
+			
+			conn.close();
+		} catch ( Exception e) {
+			JOptionPane.showMessageDialog(null,  e);
+		}
+	}
+	
+	
+	// Grab Selected Items and Save 
+	
+	// combobox.getSelectedItem();
+	
+	private void addCDAI(String addedCDAI) {
     	try {
+    		String CDAI = addedCDAI.substring(0,2);
+    		String assess_id = addedCDAI;
+    		String unique_id = assess_id;
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "INSERT INTO stu_emphasis (description) VALUE ('" + addedEmphasis + "')";
+			String query = "INSERT INTO assessment (CDAI, assess_id) VALUE ('" + CDAI + "', '" + assess_id + "');";
+			System.out.println(query);
+			MySQLConnect.stmt.executeUpdate(query);
+			query = "INSERT INTO criteria (CDAI, unique_id) VALUE ('" + CDAI + "', '" + unique_id + "');";
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
     }
-	 // NOT_DONE
-	 private void removeEmphasis(String removedEmphasis) {
+	 
+	private void removeCDAI(String removedCDAI) {
     	try {
     		MySQLConnect conn = new MySQLConnect();
 			conn.connect();
-			String query = "DELETE FROM stu_emphasis WHERE `description` = '" + removedEmphasis + "'";
+			String query = "DELETE FROM assessment WHERE `assess_id` = '" + removedCDAI + "';";
+			System.out.println(query);
+			MySQLConnect.stmt.executeUpdate(query);
+			query = "DELETE FROM criteria WHERE `unique_id` = '" + removedCDAI + "'";
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }

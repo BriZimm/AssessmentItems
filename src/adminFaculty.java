@@ -47,10 +47,10 @@ public class adminFaculty {
 		panel.setBackground(Color.ORANGE);
 		adminFrame.getContentPane().add(panel, BorderLayout.NORTH);
 		
-		JLabel lblEditEmphasisList = new JLabel("Edit Faculty List");
-		lblEditEmphasisList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblEditEmphasisList.setForeground(Color.BLACK);
-		panel.add(lblEditEmphasisList);
+		JLabel lblEditFacultyList = new JLabel("Edit Faculty List");
+		lblEditFacultyList.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblEditFacultyList.setForeground(Color.BLACK);
+		panel.add(lblEditFacultyList);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.ORANGE);

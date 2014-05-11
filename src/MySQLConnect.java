@@ -16,11 +16,12 @@ public class MySQLConnect {
 	
 	public void connect() {
 		  
-		  String url = "jdbc:mysql://localhost:3306/"+dbName;
+		  //String url = "jdbc:mysql://webdev.cs.uwosh.edu:4381/"+dbName;
 		  try {
 			  Class.forName(driver).newInstance();
 			  conn = DriverManager.getConnection (connectionURL,user,pw );
 		      stmt = conn.createStatement();
+		      System.out.println("Success!");
 		  } catch (Exception e) {
 			  System.out.println("Failure!");
 			  e.printStackTrace();
@@ -29,6 +30,7 @@ public class MySQLConnect {
 
 	public void close() {
 		try {
+			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

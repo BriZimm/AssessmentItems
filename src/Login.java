@@ -16,10 +16,10 @@ public class Login
     
     ///*
     //MySQL   
-    public static final String USER="root";
+    public static final String USER="zimmeb86";
     public static final String PWD= Login2.PWD; 
-    public static final String DB="Assessment";
-    public static final String DRIVER="jdbc:mysql://localhost/";
+    public static final String DB="zimmeb86";
+    public static final String DRIVER="jdbc:mysql://webdev.cs.uwosh.edu:4381/";
     public static final String DRIVER_CLASS="com.mysql.jdbc.Driver";
     //*/
 }
