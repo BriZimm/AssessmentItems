@@ -226,7 +226,7 @@ public class MainWindow {
 		btnAdminAssessment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				adminFrame = new JFrame();
-				adminCriteria window = new adminCriteria();
+				adminAssessments window = new adminAssessments();
 				window.adminFrame.setVisible(true);
 			}
 		});
