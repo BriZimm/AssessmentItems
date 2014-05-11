@@ -74,7 +74,7 @@ public class adminEmphasis {
 		panel_2.setLayout(null);
 		
 		emphasisBox = new JComboBox<String>();
-		emphasisBox.setBounds(78, 6, 134, 27);
+		emphasisBox.setBounds(78, 6, 192, 27);
 		emphasisBox.setEditable(true);
 		fillEmphasisList(emphasisBox);
 		panel_2.add(emphasisBox);

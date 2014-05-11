@@ -36,7 +36,7 @@ import javax.swing.border.MatteBorder;
 
 public class MainWindow {
 
-	public static JFrame frame;
+	public static JFrame frmUwOshkoshComputer;
 	public static JComboBox<String> emphasisComboBox;
 	public static JComboBox<String> StatusComboBox;
 	private JFrame adminFrame;
@@ -56,7 +56,7 @@ public class MainWindow {
 			public void run() {
 				try {
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.frmUwOshkoshComputer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -76,14 +76,15 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		// Start Frame
-		frame = new JFrame();
-		frame.getContentPane().setBackground(Color.ORANGE);
-		frame.getContentPane().setLayout(null);
+		frmUwOshkoshComputer = new JFrame();
+		frmUwOshkoshComputer.setTitle("UW Oshkosh Computer Science");
+		frmUwOshkoshComputer.getContentPane().setBackground(Color.ORANGE);
+		frmUwOshkoshComputer.getContentPane().setLayout(null);
 		
 		JPanel LeftPanel = new JPanel();
 		LeftPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		LeftPanel.setBounds(6, 70, 238, 301);
-		frame.getContentPane().add(LeftPanel);
+		frmUwOshkoshComputer.getContentPane().add(LeftPanel);
 		LeftPanel.setLayout(null);
 		
 		JLabel lblSearchIndex = new JLabel("Search Index");
@@ -213,7 +214,7 @@ public class MainWindow {
 		panel_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		panel_2.setBounds(6, 374, 238, 134);
 		panel_2.setLayout(null);
-		frame.getContentPane().add(panel_2);
+		frmUwOshkoshComputer.getContentPane().add(panel_2);
 		
 		JLabel lblAdministration = new JLabel("Administration");
 		lblAdministration.setHorizontalAlignment(SwingConstants.CENTER);
@@ -286,7 +287,7 @@ public class MainWindow {
 		JPanel HeaderPanel = new JPanel();
 		HeaderPanel.setBounds(6, 6, 988, 60);
 		HeaderPanel.setBackground(Color.ORANGE);
-		frame.getContentPane().add(HeaderPanel);
+		frmUwOshkoshComputer.getContentPane().add(HeaderPanel);
 		HeaderPanel.setLayout(null);
 		
 		JLabel lblUwOshkoshComputer = new JLabel("UW Oshkosh Computer Science Department");
@@ -309,7 +310,7 @@ public class MainWindow {
 		JPanel resultsPanel = new JPanel();
 		resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		resultsPanel.setBounds(247, 70, 747, 438);
-		frame.getContentPane().add(resultsPanel);
+		frmUwOshkoshComputer.getContentPane().add(resultsPanel);
 		
 		ResultsTable = new JTable();
 		resultsPanel.add(ResultsTable);
@@ -318,7 +319,7 @@ public class MainWindow {
 		panel.setBackground(new Color(0, 191, 255));
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel.setBounds(5, 512, 988, 60);
-		frame.getContentPane().add(panel);
+		frmUwOshkoshComputer.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		
@@ -337,7 +338,7 @@ public class MainWindow {
 		btnQuery1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			    String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter Criterion (e.g. A1F12C1)?", 
 			        "Criterion Name", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -355,7 +356,7 @@ public class MainWindow {
 		btnQuery2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter specific semester CDAI (e.g. A1F12)", 
 			        "Semester CDAI Name", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -373,7 +374,7 @@ public class MainWindow {
 		btnQuery3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter specific CDAI (e.g. A1)", 
 			        "CDAI Name", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -391,7 +392,7 @@ public class MainWindow {
 		btnQuery4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter specific semester CDAI (e.g. A1F12)", 
 			        "Semester CDAI Name", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -409,7 +410,7 @@ public class MainWindow {
 		btnQuery5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter specific CDAI (e.g. A1)", 
 			        "CDAI Name", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -463,7 +464,7 @@ public class MainWindow {
 		btnQuery9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter First and Last Name of Student", 
 			        "Student Grades", 
 			        JOptionPane.INFORMATION_MESSAGE
@@ -493,7 +494,7 @@ public class MainWindow {
 		btnCustomSqlQuery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			    String txtEntered = JOptionPane.showInputDialog(
-			        frame, 
+			        frmUwOshkoshComputer, 
 			        "Enter Custom Query (Be Careful)", 
 			        "Customize Query", 
 			        JOptionPane.WARNING_MESSAGE
@@ -523,8 +524,8 @@ public class MainWindow {
 		
 		
 		// End Frame
-		frame.setBounds(50, 50, 1000, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmUwOshkoshComputer.setBounds(50, 50, 1000, 600);
+		frmUwOshkoshComputer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public static void fillEmphasisComboBox(JComboBox<String> emphasisComboBox) {
@@ -646,18 +647,22 @@ public class MainWindow {
 	
 	private void customQuery(String query) {
 		try {
-			MySQLConnect conn = new MySQLConnect();
-			conn.connect();
-			System.out.println(query);
-			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-			
-			while(MySQLConnect.results.next()) {
-				String cdai_id = MySQLConnect.results.getString("CDAI");
-				String unique_id = MySQLConnect.results.getString("unique_id");
-				String name = MySQLConnect.results.getString("name");
-				String description = MySQLConnect.results.getString("description");
+			if (query.length() != 0) {
+				MySQLConnect conn = new MySQLConnect();
+				conn.connect();
+				System.out.println(query);
+				MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+				
+				while(MySQLConnect.results.next()) {
+					String cdai_id = MySQLConnect.results.getString("CDAI");
+					String unique_id = MySQLConnect.results.getString("unique_id");
+					String name = MySQLConnect.results.getString("name");
+					String description = MySQLConnect.results.getString("description");
+				}
+				conn.close();
+			} else {
+				JOptionPane.showMessageDialog(null, "Your Query must not be empty.");
 			}
-			conn.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}	

@@ -149,6 +149,7 @@ public class adminCriteria {
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }
@@ -162,6 +163,7 @@ public class adminCriteria {
 			System.out.println(query);
 			MySQLConnect.stmt.executeUpdate(query);
 			adminFrame.repaint();
+			conn.close();
     	} catch ( Exception e) { 
     		JOptionPane.showMessageDialog(null,  e);
         }

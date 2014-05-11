@@ -73,7 +73,7 @@ public class adminStatus {
 		panel_2.setLayout(null);
 		
 		statusBox = new JComboBox<String>();
-		statusBox.setBounds(78, 6, 134, 27);
+		statusBox.setBounds(78, 6, 191, 27);
 		statusBox.setEditable(true);
 		fillStatusList(statusBox);
 		panel_2.add(statusBox);
