@@ -21,7 +21,11 @@ import javax.swing.JComboBox;
 import javax.swing.border.MatteBorder;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
      
      
 public class MainWindow {
@@ -158,7 +162,8 @@ public class MainWindow {
                 JButton btnEmphSearch = new JButton("Search");
                 btnEmphSearch.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                               
+                        	String txtEmphasis = (String)emphasisComboBox.getSelectedItem();
+                        	searchByEmphasis(txtEmphasis);
                         }
                 });
                 btnEmphSearch.setBounds(156, 168, 70, 29);
@@ -176,7 +181,8 @@ public class MainWindow {
                 JButton btnStatusSearch = new JButton("Search");
                 btnStatusSearch.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                               
+                        	String txtStatus = (String)StatusComboBox.getSelectedItem();
+                        	searchByStatus(txtStatus);
                         }
                 });
                 btnStatusSearch.setBounds(156, 216, 70, 29);
@@ -511,6 +517,7 @@ public class MainWindow {
                 panel.add(lblNewLabel_1);
                 
                 JScrollPane scrollPane = new JScrollPane();
+                scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
                 scrollPane.setBounds(249, 70, 742, 438);
                 frmUwOshkoshComputer.getContentPane().add(scrollPane);
                 
@@ -526,6 +533,9 @@ public class MainWindow {
                 ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 ResultsTable.setBorder(new LineBorder(new Color(0, 0, 0)));
                 ResultsTable.setBounds(366, 6, 0, 0);
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+                ResultsTable.setDefaultRenderer(String.class, centerRenderer); 
                 // Add the Header
                 resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
                 resultsPanel.add(ResultsTable, BorderLayout.CENTER);
@@ -568,6 +578,36 @@ public class MainWindow {
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
                 }      
+        }
+        
+        private void searchByEmphasis(String emphasis) {
+            try {
+                    MySQLConnect conn = new MySQLConnect();
+                    conn.connect();
+                    String query = "SELECT uni_id AS ID, fname AS First, mname AS Middle, lname AS Last, sdate AS 'Start Date', edate AS 'End Date', emphasis AS Emphasis, status AS Status FROM student WHERE `emphasis` = '" + emphasis + "'";
+                    System.out.println(query);
+                    ResultsTable.setModel(rstmf.getResultSetTableModel(query));
+
+                    conn.close();
+            } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,  e);
+            }      
+
+        }
+        
+        private void searchByStatus(String status) {
+            try {
+            	MySQLConnect conn = new MySQLConnect();
+                conn.connect();
+                String query = "SELECT uni_id AS ID, fname AS First, mname AS Middle, lname AS Last, sdate AS 'Start Date', edate AS 'End Date', emphasis AS Emphasis, status AS Status FROM student WHERE `status` = '" + status + "'";
+                System.out.println(query);
+                ResultsTable.setModel(rstmf.getResultSetTableModel(query));
+
+                conn.close();
+            } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,  e);
+            }      
+
         }
        
         private void searchStudent(String studentFirstName, String studentLastName) {
@@ -657,7 +697,7 @@ public class MainWindow {
     // A1F12C1) in a specific CDAI in a specific semester.
     private void getAvgCriteriaScore(String AssessCriteriaID) {
         try {
-                        String query = "SELECT avg(score) AS 'Avg' FROM grades WHERE criteria = '" + AssessCriteriaID + "'";
+                        String query = "SELECT avg(score) AS 'Average Score' FROM grades WHERE criteria = '" + AssessCriteriaID + "'";
                         System.out.println(query);     
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -670,7 +710,7 @@ public class MainWindow {
     // semester (CDAI identified by id such as A1F12)
     private void getAvgCDAIScore(String AssessID) {
         try {
-        	String query = "SELECT avg( score ) AS 'Avg for specific CDAI', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM `criteria` WHERE unique_id = '" + AssessID + "') GROUP BY criteria";
+        	String query = "SELECT avg( score ) AS 'Average Score for Specific CDAI', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM `criteria` WHERE unique_id = '" + AssessID + "') GROUP BY criteria";
             System.out.println(query);
             ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -682,7 +722,7 @@ public class MainWindow {
     // A query to display the average scores for all criteria in a specific CDAI (identified by id such as A1)
     private void getAvgEntireCDAI(String AssessID) {
         try {
-                        String query = "SELECT avg(score) AS 'average', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM criteria WHERE CDAI = '" + AssessID + "') GROUP BY criteria ORDER BY criteria";
+                        String query = "SELECT avg(score) AS 'Average Score', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM criteria WHERE CDAI = '" + AssessID + "') GROUP BY criteria ORDER BY criteria";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -694,7 +734,7 @@ public class MainWindow {
     // A query to display the average score over all criteria in a specific CDAI in a specific semester (CDAI identified by id such as A1F12)
     private void getAvgOfAllCDAI(String AssessID) {
         try {
-                        String query = "SELECT unique_id, AVG(score) AS 'average' FROM(SELECT uni_id, unique_id, score FROM grades g JOIN criteria c WHERE g.criteria = c.name) scores WHERE unique_id = '" + AssessID + "' GROUP BY unique_id ORDER BY uni_id";
+                        String query = "SELECT unique_id AS 'Semester of Assessment, AVG(score) AS 'Average Score' FROM(SELECT uni_id, unique_id, score FROM grades g JOIN criteria c WHERE g.criteria = c.name) scores WHERE unique_id = '" + AssessID + "' GROUP BY unique_id ORDER BY uni_id";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -706,7 +746,7 @@ public class MainWindow {
     // A query to display the average score over all criteria for a specific CDAI (identified by id such as A1)
     private void getAvgOfAllCDAICriteria(String AssessID) {
         try {
-                        String query = "SELECT avg(score) AS 'average', CDAI FROM grades WHERE criteria IN (SELECT name AS 'criteria' FROM criteria WHERE CDAI = '" + AssessID + "')";
+                        String query = "SELECT avg(score) AS 'Average Score', CDAI FROM grades WHERE criteria IN (SELECT name AS 'criteria' FROM criteria WHERE CDAI = '" + AssessID + "')";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -718,7 +758,7 @@ public class MainWindow {
     // A query to identify the CDAI with the highest average score across all CDAIs.
     private void getHighestAvgOfAllCDAI() {
         try {
-                        String query = "SELECT avg( score ) AS 'average', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) DESC LIMIT 1";
+                        String query = "SELECT avg( score ) AS 'Average Score', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) DESC LIMIT 1";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -730,7 +770,7 @@ public class MainWindow {
     // A query to identify the CDAI with the lowest average score across all CDAIs.
     private void getLowestAvgOfAllCDAI() {
         try {
-                        String query = "SELECT avg( score ) AS 'average', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) ASC LIMIT 1;";
+                        String query = "SELECT avg( score ) AS 'Average Score', grades.CDAI AS 'CDAI' FROM grades JOIN criteria ON criteria.name = grades.criteria GROUP BY grades.CDAI ORDER BY avg( score ) ASC LIMIT 1;";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -743,7 +783,7 @@ public class MainWindow {
     // each emphasis, grouped by emphasis. Include ���undeclared��� as its own category.
     private void getAllAvgsOfAllCDAI() {
         try {
-                        String query = "SELECT emphasis, avg( score ) AS 'average', max( score ) AS 'maxscore', min( score ) AS 'minscore' FROM grades JOIN student ON student.uni_id = grades.uni_id GROUP BY emphasis ORDER BY emphasis";
+                        String query = "SELECT emphasis AS Emphasis, avg( score ) AS 'Average Score', max( score ) AS 'Max Score', min( score ) AS 'Min Score' FROM grades JOIN student ON student.uni_id = grades.uni_id GROUP BY emphasis ORDER BY emphasis";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -756,7 +796,7 @@ public class MainWindow {
     // a student, identified by first name and last name.
     private void getCDAIforstudent(String fname, String lname) {
         try {
-                        String query = "SELECT fname, lname, g.CDAI AS 'CDAI', criteria, score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '%" + fname + "%' AND `lname` LIKE '%" + lname + "%') ORDER BY g.uni_id";
+                        String query = "SELECT fname AS First, lname AS Last, g.CDAI AS 'CDAI', criteria AS 'Criteria Name', score AS Score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '%" + fname + "%' AND `lname` LIKE '%" + lname + "%') ORDER BY g.uni_id";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
@@ -770,7 +810,7 @@ public class MainWindow {
         try {
                 MySQLConnect conn = new MySQLConnect();
                         conn.connect();
-                        String query = "SELECT uni_id, fname, lname, max(scores.scored) as maxScore, min(scores.scored) as minScore, avg(scores.scored) as avgScore FROM (SELECT uni_id, cdai, avg(score) as scored FROM grades GROUP BY cdai, uni_id) scores NATURAL JOIN student GROUP BY uni_id";
+                        String query = "SELECT uni_id AS ID, fname AS First, lname AS Last, max(scores.scored) as 'Max Score', min(scores.scored) as 'Min Score', avg(scores.scored) as 'Average Score' FROM (SELECT uni_id, cdai, avg(score) as scored FROM grades GROUP BY cdai, uni_id) scores NATURAL JOIN student GROUP BY uni_id";
                         System.out.println(query);                             
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                         conn.close();

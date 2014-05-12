@@ -229,12 +229,12 @@ public class adminStudents {
 			//String pattern = "dd/MM/yyyy";
 			//SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 
-			if (sdate.equals("")) {
-				startDate = "00/00/0000";
-			}
-			if (edate.equals("")) {
-				endDate = "00/00/0000";
-			}
+//			if (sdate.equals("")) {
+//				startDate = "00/00/0000";
+//			}
+//			if (edate.equals("")) {
+//				endDate = "00/00/0000";
+//			}
 
 			// For now, set them to NULL
 			MySQLConnect conn = new MySQLConnect();
