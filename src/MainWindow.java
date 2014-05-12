@@ -333,12 +333,7 @@ public class MainWindow {
                 frmUwOshkoshComputer.getContentPane().add(panel);
                 panel.setLayout(null);
                
-               
-               
-               
-               
-               
-               
+
                 //
                 // Ready Made Query Buttons from Phase 3 of the Project
                 //
