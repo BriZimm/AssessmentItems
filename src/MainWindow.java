@@ -56,9 +56,9 @@ public class MainWindow {
                 EventQueue.invokeLater(new Runnable() {
                         public void run() {
                                 try {
-                                	System.setProperty("apple.laf.useScreenMenuBar", "true");
-                                	System.setProperty("com.apple.mrj.application.apple.menu.about.name", "UWO CS AIPE");
-                                	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//                                	System.setProperty("apple.laf.useScreenMenuBar", "true");
+//                                	System.setProperty("com.apple.mrj.application.apple.menu.about.name", "UWO CS AIPE");
+//                                	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                                 	MainWindow window = new MainWindow();
                                     window.frmUwOshkoshComputer.setVisible(true);
                                 } catch (Exception e) {
