@@ -1,38 +1,27 @@
-    import java.awt.EventQueue;
+    import java.awt.BorderLayout;
+import java.awt.EventQueue;
      
  
 import javax.swing.JFrame;
 import java.awt.Color;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import java.awt.Font;
-import javax.swing.JToolBar;
-import javax.swing.BoxLayout;
-import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
  
-import javax.swing.JTextField;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.RowSpec;
- 
+import javax.swing.JTextField; 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import javax.swing.border.MatteBorder;
 import javax.swing.JScrollPane;
+import javax.swing.border.LineBorder;
+import javax.swing.ListSelectionModel;
      
      
 public class MainWindow {
@@ -528,20 +517,20 @@ public class MainWindow {
                 JPanel resultsPanel = new JPanel();
                 resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
                 scrollPane.setViewportView(resultsPanel);
+                resultsPanel.setLayout(new BorderLayout(0, 0));
                 
                 ResultsTable = new JTable();
+                ResultsTable.getColumnModel();
+                ResultsTable.setFillsViewportHeight(true);
+                ResultsTable.setCellSelectionEnabled(true);
+                ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                ResultsTable.setBorder(new LineBorder(new Color(0, 0, 0)));
                 ResultsTable.setBounds(366, 6, 0, 0);
+                // Add the Header
+                resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
+                resultsPanel.add(ResultsTable, BorderLayout.CENTER);
+                
                 resultsPanel.add(ResultsTable);
-                
-                
-//                 resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-//                 resultsPanel.setLayout(null);
-//                 
-//                  ResultsTable = new JTable();
-//                  ResultsTable.setBounds(366, 6, 0, 0);
-//                  resultsPanel.add(ResultsTable);
-                
-               
                
                 // End Frame
                 frmUwOshkoshComputer.setBounds(50, 50, 1000, 600);
@@ -598,16 +587,7 @@ public class MainWindow {
                         }
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
-//                        while(MySQLConnect.results.next()) {
-//                                String id = MySQLConnect.results.getString("uni_id");
-//                                String fname = MySQLConnect.results.getString("fname");
-//                                String mname = MySQLConnect.results.getString("mname");
-//                                String lname = MySQLConnect.results.getString("lname");
-//                                String sdate = MySQLConnect.results.getString("sdate");
-//                                String edate = MySQLConnect.results.getString("edate");
-//                                String emphasis = MySQLConnect.results.getString("emphasis");
-//                                String status = MySQLConnect.results.getString("status");
-//                        }
+
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -629,13 +609,6 @@ public class MainWindow {
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                        
-//                        while(MySQLConnect.results.next()) {
-//                                String cdai_id = MySQLConnect.results.getString("CDAI");
-//                                String assess_id = MySQLConnect.results.getString("assess_id");
-//                                String courseNum = MySQLConnect.results.getString("course_num");
-//                                String faculty = MySQLConnect.results.getString("faculty");
-//                                String startDate = MySQLConnect.results.getString("startdate");
-//                        }
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -651,12 +624,6 @@ public class MainWindow {
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                        
-//                        while(MySQLConnect.results.next()) {
-//                                String cdai_id = MySQLConnect.results.getString("CDAI");
-//                                String unique_id = MySQLConnect.results.getString("unique_id");
-//                                String name = MySQLConnect.results.getString("name");
-//                                String description = MySQLConnect.results.getString("description");
-//                        }
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -672,12 +639,6 @@ public class MainWindow {
                                 System.out.println(query);
                                 ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                                
-//                                while(MySQLConnect.results.next()) {
-//                                        String cdai_id = MySQLConnect.results.getString("CDAI");
-//                                        String unique_id = MySQLConnect.results.getString("unique_id");
-//                                        String name = MySQLConnect.results.getString("name");
-//                                        String description = MySQLConnect.results.getString("description");
-//                                }
                                 conn.close();
                         } else {
                                 JOptionPane.showMessageDialog(null, "Your Query must not be empty.");
@@ -709,9 +670,9 @@ public class MainWindow {
     // semester (CDAI identified by id such as A1F12)
     private void getAvgCDAIScore(String AssessID) {
         try {
-                        String query = "SELECT avg(score) AS 'Avg for specific CDAI', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM `criteria` WHERE unique_id = '" + AssessID + "')";
-                        System.out.println(query);
-                        ResultsTable.setModel(rstmf.getResultSetTableModel(query));
+        	String query = "SELECT avg( score ) AS 'Avg for specific CDAI', criteria AS 'Criteria Name' FROM grades WHERE criteria IN (SELECT name FROM `criteria` WHERE unique_id = '" + AssessID + "') GROUP BY criteria";
+            System.out.println(query);
+            ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
             System .out.println (" Error " + e );
         }
@@ -745,7 +706,7 @@ public class MainWindow {
     // A query to display the average score over all criteria for a specific CDAI (identified by id such as A1)
     private void getAvgOfAllCDAICriteria(String AssessID) {
         try {
-                        String query = "SELECT avg(score) AS 'average' FROM grades WHERE criteria IN (SELECT name AS 'criteria' FROM criteria WHERE CDAI = '" + AssessID + "')";
+                        String query = "SELECT avg(score) AS 'average', CDAI FROM grades WHERE criteria IN (SELECT name AS 'criteria' FROM criteria WHERE CDAI = '" + AssessID + "')";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {

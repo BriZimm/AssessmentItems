@@ -31,6 +31,8 @@ public class ResultSetTableModelFactory {
         Statement statement = connection. createStatement (ResultSet.TYPE_SCROLL_INSENSITIVE ,ResultSet.CONCUR_READ_ONLY );
         // Run the query , creating a ResultSet
         ResultSet r = statement.executeQuery( query );
+        
+        
         // Create and return a TableModel for the ResultSet
         return new ResultSetTableModel(r);
     }

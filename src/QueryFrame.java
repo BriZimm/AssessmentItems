@@ -29,7 +29,7 @@ public class QueryFrame extends JFrame {
         
         // Place the components within this window
         Container contentPane = getContentPane ();
-        contentPane.add (query , BorderLayout.NORTH );
+        contentPane.add (query, BorderLayout.NORTH );
         contentPane.add (new JScrollPane ( table ), BorderLayout.CENTER );
         
         // Connect entry of query in the JTextField with the result

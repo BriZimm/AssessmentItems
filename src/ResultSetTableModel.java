@@ -1,4 +1,5 @@
 import java.sql .*;
+
 import javax.swing.table.*;
 import javax.swing.event.*;
 /**
@@ -17,7 +18,7 @@ public class ResultSetTableModel extends AbstractTableModel {
         this.results = results ;
         metadata = results.getMetaData (); // Get metadata on them
         numcols = metadata.getColumnCount (); // How many columns ?
-        results.last (); // Here ’s the kludge -- Move to last row
+        results.last (); // Here ���s the kludge -- Move to last row
         numrows = results.getRow (); // And use getRow to determine how many rows
     }
     
