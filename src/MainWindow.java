@@ -32,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import javax.swing.border.MatteBorder;
+import javax.swing.JScrollPane;
      
      
 public class MainWindow {
@@ -313,18 +314,11 @@ public class MainWindow {
                 separator.setBounds(252, 26, 491, 12);
                 HeaderPanel.add(separator);
                
-                resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-                resultsPanel.setBounds(247, 70, 747, 438);
-                frmUwOshkoshComputer.getContentPane().add(resultsPanel);
-               
                 try{
                         rstmf = new ResultSetTableModelFactory(Login.DRIVER_CLASS, Login.DRIVER, Login.DB, Login.USER, Login.PWD);
                 }catch(Exception e){
                         System.out.println("Error on creating results table!");
                 }
-               
-                ResultsTable = new JTable();
-                resultsPanel.add(ResultsTable);
                
                 JPanel panel = new JPanel();
                 panel.setBackground(new Color(0, 191, 255));
@@ -526,10 +520,27 @@ public class MainWindow {
                 lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
                 lblNewLabel_1.setBounds(7, 16, 228, 16);
                 panel.add(lblNewLabel_1);
-                btnCustomSqlQuery.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                        }
-                });
+                
+                JScrollPane scrollPane = new JScrollPane();
+                scrollPane.setBounds(249, 70, 742, 438);
+                frmUwOshkoshComputer.getContentPane().add(scrollPane);
+                
+                JPanel resultsPanel = new JPanel();
+                resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+                scrollPane.setViewportView(resultsPanel);
+                
+                ResultsTable = new JTable();
+                ResultsTable.setBounds(366, 6, 0, 0);
+                resultsPanel.add(ResultsTable);
+                
+                
+//                 resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+//                 resultsPanel.setLayout(null);
+//                 
+//                  ResultsTable = new JTable();
+//                  ResultsTable.setBounds(366, 6, 0, 0);
+//                  resultsPanel.add(ResultsTable);
+                
                
                
                 // End Frame
