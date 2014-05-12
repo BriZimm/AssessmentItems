@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.mysql.jdbc.ResultSetMetaData;
+import javax.swing.SwingConstants;
 
 
 
@@ -38,6 +39,9 @@ public class adminAssessments {
 	private JTextField CDAICourseNum;
 	private JTextField CDAI_Date;
 	private JComboBox<String> CDAIFacultycomboBox;
+	public static JPanel resultsPanel;
+    public ResultSetTableModelFactory rstmf;
+    private JTable ResultsTable;
 	
 	/**
 	 * Create the window.
@@ -256,12 +260,23 @@ public class adminAssessments {
 		separator_2.setBounds(4, 308, 490, 12);
 		panel_2.add(separator_2);
 		
+		JLabel lblCriteria = new JLabel("Criteria");
+		lblCriteria.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCriteria.setBounds(19, 130, 454, 16);
+		panel_2.add(lblCriteria);
 		
-		CriteriaResultsTable = new JTable();
-		CriteriaResultsTable.setBounds(19, 123, 456, 173);
-		panel_2.add(CriteriaResultsTable);
+		resultsPanel = new JPanel();
+		resultsPanel.setBounds(19, 151, 456, 145);
+		panel_2.add(resultsPanel);
 		
-		
+		try{
+            rstmf = new ResultSetTableModelFactory(Login.DRIVER_CLASS, Login.DRIVER, Login.DB, Login.USER, Login.PWD);
+	    }catch(Exception e){
+	        System.out.println("Error on creating results table!");
+	    }
+	   
+	    ResultsTable = new JTable();
+	    resultsPanel.add(ResultsTable);
 		
 	}
 	
@@ -363,14 +378,7 @@ public class adminAssessments {
 			
 			query = "SELECT name, description FROM `criteria` WHERE `unique_id` = '" + CDAI + "';";
 			System.out.println(query);
-			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-
-		    // It creates and displays the table
-		
-			CriteriaResultsTable = new JTable(buildTableModel(MySQLConnect.results));
-			
-		    //JOptionPane.showMessageDialog(null, new JScrollPane(CriteriaResultsTable));
-			
+			ResultsTable.setModel(rstmf.getResultSetTableModel(query));
 			
 		} catch ( Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
@@ -427,29 +435,4 @@ public class adminAssessments {
     		JOptionPane.showMessageDialog(null,  e);
         }
     }
-	
-	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-
-	    ResultSetMetaData metaData = (ResultSetMetaData) rs.getMetaData();
-
-	    // names of columns
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = metaData.getColumnCount();
-	    for (int column = 1; column <= columnCount; column++) {
-	        columnNames.add(metaData.getColumnName(column));
-	    }
-
-	    // data of the table
-	    Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-	    while (rs.next()) {
-	        Vector<Object> vector = new Vector<Object>();
-	        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-	            vector.add(rs.getObject(columnIndex));
-	        }
-	        data.add(vector);
-	    }
-
-	    return new DefaultTableModel(data, columnNames);
-
-	}
 }

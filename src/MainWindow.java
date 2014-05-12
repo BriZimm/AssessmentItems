@@ -480,7 +480,9 @@ public class MainWindow {
                                 "Student Grades",
                                 JOptionPane.INFORMATION_MESSAGE
                                 );
-                                String[] name = txtEntered.split("/s");
+                                String[] name = txtEntered.split("\\s+");
+                                System.out.println(name[0]);
+                                System.out.println(name[1]);
                                 getCDAIforstudent(name[0], name[1]);
                         }
                 });
@@ -586,21 +588,20 @@ public class MainWindow {
                         } else if (studentLastName.length() < 1) {
                                 query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "'";
                         } else {
-                                query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "' OR `lname` LIKE '" + studentLastName + "'";
+                                query = "SELECT * FROM student WHERE `fname` LIKE '%" + studentFirstName + "%' AND `lname` LIKE '%" + studentLastName + "%'";
                         }
                         System.out.println(query);
-                        MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-                       
-                        while(MySQLConnect.results.next()) {
-                                String id = MySQLConnect.results.getString("uni_id");
-                                String fname = MySQLConnect.results.getString("fname");
-                                String mname = MySQLConnect.results.getString("mname");
-                                String lname = MySQLConnect.results.getString("lname");
-                                String sdate = MySQLConnect.results.getString("sdate");
-                                String edate = MySQLConnect.results.getString("edate");
-                                String emphasis = MySQLConnect.results.getString("emphasis");
-                                String status = MySQLConnect.results.getString("status");
-                        }
+                        ResultsTable.setModel(rstmf.getResultSetTableModel(query));
+//                        while(MySQLConnect.results.next()) {
+//                                String id = MySQLConnect.results.getString("uni_id");
+//                                String fname = MySQLConnect.results.getString("fname");
+//                                String mname = MySQLConnect.results.getString("mname");
+//                                String lname = MySQLConnect.results.getString("lname");
+//                                String sdate = MySQLConnect.results.getString("sdate");
+//                                String edate = MySQLConnect.results.getString("edate");
+//                                String emphasis = MySQLConnect.results.getString("emphasis");
+//                                String status = MySQLConnect.results.getString("status");
+//                        }
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -620,15 +621,15 @@ public class MainWindow {
                                 query = "SELECT * FROM assessment WHERE `assess_id` = '" + CDAI + "'";
                         }
                         System.out.println(query);
-                        MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+                        ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                        
-                        while(MySQLConnect.results.next()) {
-                                String cdai_id = MySQLConnect.results.getString("CDAI");
-                                String assess_id = MySQLConnect.results.getString("assess_id");
-                                String courseNum = MySQLConnect.results.getString("course_num");
-                                String faculty = MySQLConnect.results.getString("faculty");
-                                String startDate = MySQLConnect.results.getString("startdate");
-                        }
+//                        while(MySQLConnect.results.next()) {
+//                                String cdai_id = MySQLConnect.results.getString("CDAI");
+//                                String assess_id = MySQLConnect.results.getString("assess_id");
+//                                String courseNum = MySQLConnect.results.getString("course_num");
+//                                String faculty = MySQLConnect.results.getString("faculty");
+//                                String startDate = MySQLConnect.results.getString("startdate");
+//                        }
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -642,14 +643,14 @@ public class MainWindow {
                         conn.connect();
                         String query = "SELECT * FROM criteria WHERE `name` = '" + criteria_id + "'";
                         System.out.println(query);
-                        MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+                        ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                        
-                        while(MySQLConnect.results.next()) {
-                                String cdai_id = MySQLConnect.results.getString("CDAI");
-                                String unique_id = MySQLConnect.results.getString("unique_id");
-                                String name = MySQLConnect.results.getString("name");
-                                String description = MySQLConnect.results.getString("description");
-                        }
+//                        while(MySQLConnect.results.next()) {
+//                                String cdai_id = MySQLConnect.results.getString("CDAI");
+//                                String unique_id = MySQLConnect.results.getString("unique_id");
+//                                String name = MySQLConnect.results.getString("name");
+//                                String description = MySQLConnect.results.getString("description");
+//                        }
                         conn.close();
                 } catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  e);
@@ -663,14 +664,14 @@ public class MainWindow {
                                 MySQLConnect conn = new MySQLConnect();
                                 conn.connect();
                                 System.out.println(query);
-                                MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
+                                ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                                
-                                while(MySQLConnect.results.next()) {
-                                        String cdai_id = MySQLConnect.results.getString("CDAI");
-                                        String unique_id = MySQLConnect.results.getString("unique_id");
-                                        String name = MySQLConnect.results.getString("name");
-                                        String description = MySQLConnect.results.getString("description");
-                                }
+//                                while(MySQLConnect.results.next()) {
+//                                        String cdai_id = MySQLConnect.results.getString("CDAI");
+//                                        String unique_id = MySQLConnect.results.getString("unique_id");
+//                                        String name = MySQLConnect.results.getString("name");
+//                                        String description = MySQLConnect.results.getString("description");
+//                                }
                                 conn.close();
                         } else {
                                 JOptionPane.showMessageDialog(null, "Your Query must not be empty.");
@@ -788,7 +789,7 @@ public class MainWindow {
     // a student, identified by first name and last name.
     private void getCDAIforstudent(String fname, String lname) {
         try {
-                        String query = "SELECT fname, lname, g.CDAI AS 'CDAI', criteria, score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '" + fname + "' AND `lname` LIKE '%" + lname + "') ORDER BY g.uni_id";
+                        String query = "SELECT fname, lname, g.CDAI AS 'CDAI', criteria, score FROM grades g JOIN criteria c JOIN student s WHERE g.criteria = c.name AND s.uni_id = g.uni_id AND g.uni_id = (SELECT uni_id FROM student WHERE `fname` LIKE '%" + fname + "%' AND `lname` LIKE '%" + lname + "%') ORDER BY g.uni_id";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
         } catch ( Exception e) {
