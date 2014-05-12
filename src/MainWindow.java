@@ -529,7 +529,6 @@ public class MainWindow {
                 // Add the Header
                 resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
                 resultsPanel.add(ResultsTable, BorderLayout.CENTER);
-                
                 resultsPanel.add(ResultsTable);
                
                 // End Frame
@@ -579,11 +578,11 @@ public class MainWindow {
                         if (studentFirstName.length() < 1 && studentLastName.length() < 1 ) {
                                 query = ""; // No text was entered in the name fields. Return No Results
                         } else if (studentFirstName.length() < 1) {
-                                query = "SELECT * FROM student WHERE `lname` LIKE '" + studentLastName + "'";
+                                query = "SELECT uni_id AS ID, fname AS First, mname AS Middle, lname AS Last, sdate AS 'Start Date', edate AS 'End Date', emphasis AS Emphasis, status AS Status FROM student WHERE `lname` LIKE '" + studentLastName + "'";
                         } else if (studentLastName.length() < 1) {
-                                query = "SELECT * FROM student WHERE `fname` LIKE '" + studentFirstName + "'";
+                                query = "SELECT uni_id AS ID, fname AS First, mname AS Middle, lname AS Last, sdate AS 'Start Date', edate AS 'End Date', emphasis AS Emphasis, status AS Status FROM student WHERE `fname` LIKE '" + studentFirstName + "'";
                         } else {
-                                query = "SELECT * FROM student WHERE `fname` LIKE '%" + studentFirstName + "%' AND `lname` LIKE '%" + studentLastName + "%'";
+                                query = "SELECT uni_id AS ID, fname AS First, mname AS Middle, lname AS Last, sdate AS 'Start Date', edate AS 'End Date', emphasis AS Emphasis, status AS Status FROM student WHERE `fname` LIKE '%" + studentFirstName + "%' AND `lname` LIKE '%" + studentLastName + "%'";
                         }
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
@@ -601,10 +600,10 @@ public class MainWindow {
                         conn.connect();
                         String query = "";
                         if (CDAI.length() == 2) { // User is searching for a two char CDAI string e.g. A1
-                                query = "SELECT * FROM assessment WHERE `CDAI` = '" + CDAI + "'";
+                                query = "SELECT CDAI, assess_id AS Semester, course_num AS 'Course Number', faculty AS Faculty, startdate AS 'Start Date' FROM assessment WHERE `CDAI` = '" + CDAI + "'";
                         }
                         if (CDAI.length() == 5) { // User is searching for a 5 char CDAI string e.g. A1F11
-                                query = "SELECT * FROM assessment WHERE `assess_id` = '" + CDAI + "'";
+                                query = "SELECT CDAI, assess_id AS Semester, course_num AS 'Course Number', faculty AS Faculty, startdate AS 'Start Date' FROM assessment WHERE `assess_id` = '" + CDAI + "'";
                         }
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
@@ -620,7 +619,8 @@ public class MainWindow {
                 try {
                         MySQLConnect conn = new MySQLConnect();
                         conn.connect();
-                        String query = "SELECT * FROM criteria WHERE `name` = '" + criteria_id + "'";
+                        System.out.println(criteria_id);
+                        String query = "SELECT CDAI, unique_id AS Semester, name AS 'Criteria Name', description AS Description FROM criteria WHERE `name` = '" + criteria_id + "'";
                         System.out.println(query);
                         ResultsTable.setModel(rstmf.getResultSetTableModel(query));
                        
