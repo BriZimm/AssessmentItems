@@ -19,7 +19,7 @@ public class ResultSetTableModelFactory {
     * Takes a SQL query , pass it to the database , obtain the results
     * as a ResultSet , and return a ResultSetTableModel object
     **/
-    public ResultSetTableModel getResultSetTableModel(String query)throws SQLException
+    public ResultSetTableModel getResultSetTableModel(String query) throws SQLException
     {
         if ( connection == null )
         throw new IllegalStateException ("Connection already closed .");

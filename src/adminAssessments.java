@@ -9,20 +9,17 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Vector;
 
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import com.mysql.jdbc.ResultSetMetaData;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.SwingConstants;
 
 
@@ -41,7 +38,6 @@ public class adminAssessments {
 	private JComboBox<String> CDAIFacultycomboBox;
 	public static JPanel resultsPanel;
     public ResultSetTableModelFactory rstmf;
-    private JTable ResultsTable;
 	
 	/**
 	 * Create the window.
@@ -263,40 +259,29 @@ public class adminAssessments {
 		
 		JLabel lblCriteria = new JLabel("Criteria");
 		lblCriteria.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCriteria.setBounds(19, 130, 454, 16);
+		lblCriteria.setBounds(18, 126, 454, 16);
 		panel_2.add(lblCriteria);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(16, 146, 459, 156);
+		panel_2.add(scrollPane);
+		
 		resultsPanel = new JPanel();
-		resultsPanel.setBounds(19, 151, 456, 145);
-		panel_2.add(resultsPanel);
+		scrollPane.setColumnHeaderView(resultsPanel);
+		scrollPane.setViewportView(resultsPanel);
+		resultsPanel.setLayout(new BorderLayout(0, 0));
 		
-		try{
-            rstmf = new ResultSetTableModelFactory(Login.DRIVER_CLASS, Login.DRIVER, Login.DB, Login.USER, Login.PWD);
-	    }catch(Exception e){
-	        System.out.println("Error on creating results table!");
-	    }
-	   
-	    ResultsTable = new JTable();
-	    resultsPanel.add(ResultsTable);
+		CriteriaResultsTable = new JTable();
+		CriteriaResultsTable.setFillsViewportHeight(true);
+		CriteriaResultsTable.setCellSelectionEnabled(true);
+		CriteriaResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		CriteriaResultsTable.setBorder(new LineBorder(new Color(0, 0, 0)));
+		CriteriaResultsTable.setBounds(366, 6, 0, 0);
+        // Add the Header
+        resultsPanel.add(CriteriaResultsTable.getTableHeader(), BorderLayout.NORTH);
+        resultsPanel.add(CriteriaResultsTable, BorderLayout.CENTER);
+        resultsPanel.add(CriteriaResultsTable);
 		
-	}
-	
-	private String getFacultyName(int id) {
-		try {
-			String faculty = "";
-			MySQLConnect conn = new MySQLConnect();
-			conn.connect();
-			String query = "SELECT name from faculty WHERE `id` = " + id;
-			MySQLConnect.results=MySQLConnect.stmt.executeQuery(query);
-			while(MySQLConnect.results.next()) {
-				faculty = MySQLConnect.results.getString("name");
-			}
-			conn.close();
-			return faculty;
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,  e);
-		}
-		return null;	
 	}
 	
 	private void fillFacultyList(JComboBox<String> facultyBox) {
@@ -339,7 +324,6 @@ public class adminAssessments {
 			}
 			
 			String sem = assess_id.substring(assess_id.length() - 3);
-			System.out.println(sem);
 			if (sem.substring(0, 1).equals("F")) {
 				semester = "Fall ";
 			} else if (sem.substring(0, 1).equals("S")){
@@ -365,11 +349,12 @@ public class adminAssessments {
 			CDAIFacultycomboBox.setSelectedItem(faculty);
 			
 			// Populate the Criteria JPanel
-			conn.connect();		
-			query = "SELECT name, description FROM `criteria` WHERE `unique_id` = '" + CDAI + "';";
+			conn.connect();	
+			query = "SELECT name AS 'Criteria Name', description AS Description FROM `criteria` WHERE `unique_id` = '" + CDAI + "'";
 			System.out.println(query);
-			ResultsTable.setModel(rstmf.getResultSetTableModel(query));
-			
+			// Null Pointer Exception here for some reason
+			CriteriaResultsTable.setModel(rstmf.getResultSetTableModel(query));
+			conn.close();
 		} catch ( Exception e) {
 			JOptionPane.showMessageDialog(null,  e);
 		}

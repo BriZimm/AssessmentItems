@@ -1,7 +1,8 @@
-    import java.awt.BorderLayout;
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
      
  
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -12,19 +13,22 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
  
+import javax.swing.ImageIcon;
 import javax.swing.JTextField; 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
+import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
      
      
@@ -42,6 +46,7 @@ public class MainWindow {
         private JTextField txtAssessment;
         private JTable ResultsTable;
         private JTextField txtStudentLast;
+        private JPanel TitanLogo;
        
  
         /**
@@ -51,8 +56,11 @@ public class MainWindow {
                 EventQueue.invokeLater(new Runnable() {
                         public void run() {
                                 try {
-                                        MainWindow window = new MainWindow();
-                                        window.frmUwOshkoshComputer.setVisible(true);
+                                	System.setProperty("apple.laf.useScreenMenuBar", "true");
+                                	System.setProperty("com.apple.mrj.application.apple.menu.about.name", "UWO CS AIPE");
+                                	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                                	MainWindow window = new MainWindow();
+                                    window.frmUwOshkoshComputer.setVisible(true);
                                 } catch (Exception e) {
                                         e.printStackTrace();
                                 }
@@ -69,6 +77,7 @@ public class MainWindow {
  
         /**
          * Initialize the contents of the frame.
+         * @throws IOException 
          */
         private void initialize() {
                 // Start Frame
@@ -207,7 +216,20 @@ public class MainWindow {
                 });
                 btnCriteriaSearch.setBounds(156, 262, 70, 29);
                 LeftPanel.add(btnCriteriaSearch);
-               
+                
+                TitanLogo = new JPanel();
+                TitanLogo.setBounds(241, -2, 746, 442);
+                LeftPanel.add(TitanLogo);
+				try {
+					BufferedImage myPicture;
+					myPicture = ImageIO.read(new File("titan.jpg"));
+					JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+					TitanLogo.add(picLabel);
+					TitanLogo.setVisible(true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+                
                 JPanel panel_2 = new JPanel();
                 panel_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
                 panel_2.setBounds(6, 374, 238, 134);
@@ -504,24 +526,24 @@ public class MainWindow {
                 btnCustomSqlQuery.setBounds(65, 30, 117, 30);
                 panel.add(btnCustomSqlQuery);
                
-                JLabel lblHoldMouseOver = new JLabel("Hold mouse over each Query to learn what each does,");
-                lblHoldMouseOver.setHorizontalAlignment(SwingConstants.CENTER);
-                lblHoldMouseOver.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
-                lblHoldMouseOver.setBounds(6, 3, 264, 17);
-                panel.add(lblHoldMouseOver);
+                JLabel lblInstruction1 = new JLabel("Hold mouse over each Query to learn what each does,");
+                lblInstruction1.setHorizontalAlignment(SwingConstants.CENTER);
+                lblInstruction1.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
+                lblInstruction1.setBounds(6, 3, 264, 17);
+                panel.add(lblInstruction1);
                
-                JLabel lblNewLabel_1 = new JLabel("or try a custom query below.");
-                lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-                lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
-                lblNewLabel_1.setBounds(7, 16, 228, 16);
-                panel.add(lblNewLabel_1);
+                JLabel lblInstruction2 = new JLabel("or try a custom query below.");
+                lblInstruction2.setHorizontalAlignment(SwingConstants.CENTER);
+                lblInstruction2.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
+                lblInstruction2.setBounds(7, 16, 228, 16);
+                panel.add(lblInstruction2);
                 
                 JScrollPane scrollPane = new JScrollPane();
                 scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
                 scrollPane.setBounds(249, 70, 742, 438);
                 frmUwOshkoshComputer.getContentPane().add(scrollPane);
                 
-                JPanel resultsPanel = new JPanel();
+                resultsPanel = new JPanel();
                 resultsPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
                 scrollPane.setViewportView(resultsPanel);
                 resultsPanel.setLayout(new BorderLayout(0, 0));
